@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор эмодзи</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f0f0f0;
+            color: #333;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        body.dark-theme {
+            background-color: #333;
+            color: #f0f0f0;
+        }
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #007bff;
+        }
+        .theme-switcher {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .theme-switcher:hover {
+            background-color: #0056b3;
+        }
+        .form-container {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .form-container.dark-theme {
+            background: #444;
+            color: #f0f0f0;
+        }
+        label {
+            display: block;
+            margin: 8px 0 4px;
+            font-weight: bold;
+        }
+        input[type="text"], select, input[type="color"], input[type="number"] {
+            width: calc(100% - 16px);
+            padding: 6px;
+            margin-bottom: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        .canvas-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .canvas-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        canvas {
+            border: 1px solid #ccc;
+            background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
+                              linear-gradient(-45deg, #ddd 25%, transparent 25%),
+                              linear-gradient(45deg, transparent 75%, #ddd 75%),
+                              linear-gradient(-45deg, transparent 75%, #ddd 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+        }
+        .download-link {
+            display: block;
+            color: #007bff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .download-link:hover {
+            text-decoration: underline;
+        }
+        #downloadAll {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 15px;
+            display: none; /* Скрываем кнопку по умолчанию */
+        }
+        #downloadAll:hover {
+            background-color: #0056b3;
+        }
+        .preview {
+            margin-top: 15px;
+            text-align: center;
+        }
+        .preview canvas {
+            margin: 8px;
+        }
+        .color-picker-container {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .color-picker-container label {
+            margin: 0;
+        }
+        .color-picker-container input[type="color"] {
+            width: 50px;
+            height: 30px;
+            padding: 2px;
+        }
+        .row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .row label {
+            flex: 1;
+        }
+        .row input[type="number"] {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <button class="theme-switcher" onclick="toggleTheme()">Переключить тему</button>
+    <h1>Генератор эмодзи для Telegram</h1>
+    <div class="form-container">
+        <form id="emojiForm">
+            <label for="word">Слово:</label>
+            <input type="text" id="word" name="word" required>
+            <br>
+            <label for="font">Шрифт:</label>
+            <select id="font" name="font">
+                <option value="Arial">Arial</option>
+                <option value="Times New Roman">Times New Roman</option>
+                <option value="Courier New">Courier New</option>
+                <option value="Verdana">Verdana</option>
+                <option value="Georgia">Georgia</option>
+                <option value="Comic Sans MS">Comic Sans MS</option>
+                <option value="Montserrat">Montserrat</option>
+                <option value="Roboto">Roboto</option>
+                <option value="Open Sans">Open Sans</option>
+            </select>
+            <br>
+            <div class="color-picker-container">
+                <label for="textColor">Цвет текста:</label>
+                <input type="color" id="textColor" name="textColor" value="#000000">
+                <label for="bgColor">Цвет подложки:</label>
+                <input type="color" id="bgColor" name="bgColor" value="#ffffff">
+            </div>
+            <br>
+            <div class="row">
+                <label for="bgHeight">Высота подложки:</label>
+                <label for="rounding">Закругление:</label>
+                <label for="textSize">Размер текста:</label>
+                <label for="textOffset">Смещение текста:</label>
+            </div>
+            <div class="row">
+                <input type="number" id="bgHeight" name="bgHeight" value="100" min="1" max="100">
+                <input type="number" id="rounding" name="rounding" value="20" min="0" max="50">
+                <input type="number" id="textSize" name="textSize" value="80" min="10" max="100">
+                <input type="number" id="textOffset" name="textOffset" value="0" min="-50" max="50">
+            </div>
+        </form>
+    </div>
+
+    <div class="preview" id="previewContainer"></div>
+    <div class="canvas-container" id="canvasContainer"></div>
+    <button id="downloadAll">Скачать архив</button>
+
+    <!-- Подключаем библиотеку JSZip -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+    <script>
+        const canvasContainer = document.getElementById('canvasContainer');
+        const previewContainer = document.getElementById('previewContainer');
+        const downloadAllButton = document.getElementById('downloadAll');
+        const wordInput = document.getElementById('word');
+        let images = []; // Массив для хранения данных изображений
+
+        // Функция для обновления превью
+        function updatePreview() {
+            const word = wordInput.value;
+            const fontFamily = document.getElementById('font').value;
+            const textColor = document.getElementById('textColor').value;
+            const bgColor = document.getElementById('bgColor').value;
+            const bgHeight = parseInt(document.getElementById('bgHeight').value);
+            const rounding = parseInt(document.getElementById('rounding').value);
+            const textSize = parseInt(document.getElementById('textSize').value);
+            const textOffset = parseInt(document.getElementById('textOffset').value);
+
+            previewContainer.innerHTML = ''; // Очищаем превью
+            images = []; // Очищаем массив изображений
+
+            if (word) {
+                const letters = word.split('');
+
+                letters.forEach((letter, index) => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    canvas.width = 100;
+                    canvas.height = 100;
+
+                    ctx.font = `${textSize}px ${fontFamily}`;
+                    ctx.textBaseline = 'middle';
+                    ctx.textAlign = 'center';
+
+                    ctx.fillStyle = bgColor;
+                    const yOffset = (canvas.height - bgHeight) / 2;
+
+                    if (index === 0 || index === letters.length - 1) {
+                        roundRect(ctx, 0, yOffset, canvas.width, bgHeight, rounding, index === 0, index === letters.length - 1);
+                    } else {
+                        ctx.fillRect(0, yOffset, canvas.width, bgHeight);
+                    }
+                    ctx.fill();
+
+                    ctx.fillStyle = textColor;
+                    // Центрируем текст по вертикали и горизонтали, учитывая смещение
+                    ctx.fillText(letter, canvas.width / 2, canvas.height / 2 + textOffset);
+
+                    // Сохраняем изображение в массив
+                    const dataURL = canvas.toDataURL('image/png');
+                    const fileName = `${index + 1}_${letter}_emoji.png`;
+                    images.push({ fileName, dataURL });
+
+                    previewContainer.appendChild(canvas);
+                });
+
+                // Показываем кнопку "Скачать архив", если введено хотя бы одно слово
+                downloadAllButton.style.display = 'block';
+            } else {
+                // Скрываем кнопку, если поле пустое
+                downloadAllButton.style.display = 'none';
+            }
+        }
+
+        // Обновляем превью при изменении параметров
+        document.getElementById('emojiForm').addEventListener('input', updatePreview);
+
+        // Обработчик для кнопки "Скачать архив"
+        downloadAllButton.addEventListener('click', () => {
+            const zip = new JSZip();
+            const folder = zip.folder("emojis");
+
+            images.forEach((img) => {
+                const base64Data = img.dataURL.split(',')[1];
+                folder.file(img.fileName, base64Data, { base64: true });
+            });
+
+            zip.generateAsync({ type: "blob" }).then((content) => {
+                saveAs(content, "emojis.zip");
+            });
+        });
+
+        // Функция для рисования прямоугольника с закругленными углами
+        function roundRect(ctx, x, y, width, height, radius, roundLeft, roundRight) {
+            ctx.beginPath();
+
+            ctx.moveTo(x + (roundLeft ? radius : 0), y);
+            ctx.lineTo(x + width - (roundRight ? radius : 0), y);
+
+            if (roundRight) {
+                ctx.arcTo(x + width, y, x + width, y + radius, radius);
+            }
+
+            ctx.lineTo(x + width, y + height - (roundRight ? radius : 0));
+
+            if (roundRight) {
+                ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
+            }
+
+            ctx.lineTo(x + (roundLeft ? radius : 0), y + height);
+
+            if (roundLeft) {
+                ctx.arcTo(x, y + height, x, y + height - radius, radius);
+            }
+
+            ctx.lineTo(x, y + (roundLeft ? radius : 0));
+
+            if (roundLeft) {
+                ctx.arcTo(x, y, x + radius, y, radius);
+            }
+
+            ctx.closePath();
+        }
+
+        // Переключение темы
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+            document.querySelector('.form-container').classList.toggle('dark-theme');
+        }
+    </script>
+</body>
+</html>

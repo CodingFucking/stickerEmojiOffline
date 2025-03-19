@@ -66,18 +66,18 @@ body.dark-theme .compact-preview-label {
 
 body.dark-theme .theme-switcher,
 body.dark-theme .compact-preview-label {
-    background-color: #0056b3;
+    background-color: #var(--primary-color);
 }
 
 body.dark-theme .theme-switcher:hover,
 body.dark-theme .compact-preview-label:hover {
-    background-color: #004080;
+    background-color: var(--primary-color);
 }
 
 /* ==================== Заголовок ==================== */
 header {
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
     padding: 10px;
     background-color: white;
@@ -90,47 +90,97 @@ header {
 
 .title {
     margin: 0;
-    left: 0;
     flex-grow: 1;
     text-align: left;
     font-size: 3vw;
 }
 
-/* ==================== Кнопки ==================== */
-.instruction-button,
-.example-button,
-.theme-switcher,
-.example-stick-button,
-.compact-preview-label {
+/* ==================== Бургер-меню ==================== */
+.burger-menu {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
     padding: 10px;
-    background-color: var(--primary-color);
-    color: white;
+}
+
+.burger-menu .bar {
+    width: 25px;
+    height: 3px;
+    background-color: var(--primary-color); /* Цвет бургера как у заголовка */
+    margin: 4px 0;
+    transition: 0.4s;
+}
+
+/* Анимация бургер-меню */
+.burger-menu.active .bar:nth-child(1) {
+    transform: rotate(-45deg) translate(-5px, 6px);
+}
+
+.burger-menu.active .bar:nth-child(2) {
+    opacity: 0;
+}
+
+.burger-menu.active .bar:nth-child(3) {
+    transform: rotate(45deg) translate(-5px, -6px);
+}
+
+/* ==================== Выпадающий список кнопок ==================== */
+.controls-container {
+    display: none; /* По умолчанию скрыт */
+    flex-direction: column;
+    position: absolute;
+    top: 100px; /* Отступ от верхнего края шапки */
+    right: 35px; /* Отступ от правого края, как у шапки */
+    background-color: var(--modal-background); /* Фон зависит от темы */
+    border-radius: var(--border-radius-ui); /* Скругление углов */
+    padding: 10px;
+    z-index: 1000;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень остаётся */
+    min-width: 200px; /* Фиксированная ширина контейнера */
+    color: var(--modal-text); /* Цвет текста зависит от темы */
+}
+
+.controls-container.active {
+    display: flex; /* Показываем при активации */
+}
+
+/* Общие стили для всех кнопок */
+.controls-container button {
+    padding: 10px;
+    background-color: var(--primary-color); /* Цвет кнопок зависит от темы */
+    color: white; /* Текст кнопок всегда белый */
     border: none;
     border-radius: var(--border-radius-ui);
     cursor: pointer;
     font-size: 15px;
+    margin: 5px 0; /* Отступ между элементами */
+    text-align: left;
+    width: 100%; /* Ширина на всю ширину контейнера */
+    white-space: nowrap; /* Текст не переносится */
+    display: flex; /* Для выравнивания содержимого */
+    align-items: center; /* Выравниваем текст и иконки по центру */
+    justify-content: flex-start; /* Текст выравнивается по левому краю */
 }
 
-.theme-switcher::before {
-    content: '💡';
+/* Стили для hover-эффекта */
+.controls-container button:hover {
+    background-color: var(--primary-hover); /* Цвет hover зависит от темы */
 }
 
-.compact-preview-label::before {
-    content: '🔗';
+/* Стили для кнопки с чекбоксом */
+.compact-preview-button {
+    position: relative; /* Для позиционирования чекбокса */
 }
 
-.instruction-button:hover,
-.example-button:hover,
-.theme-switcher:hover,
-.example-stick-button:hover,
-.compact-preview-label:hover {
-    background-color: var(--primary-hover);
+.compact-preview-button input[type="checkbox"] {
+    position: absolute; /* Чекбокс скрыт, но функционал сохраняется */
+    opacity: 0;
+    cursor: pointer;
 }
 
-.controls {
-    display: flex;
-    gap: 5px;
-    align-items: center;
+/* Стили для активного состояния кнопки с чекбоксом */
+.compact-preview-button.active {
+    background-color: var(--primary-hover); /* Пример стиля для активного состояния */
 }
 
 /* ==================== Контейнеры ==================== */
@@ -447,32 +497,3 @@ body.dark-theme .modal-content iframe {
     border-radius: 10px;
 }
 
-.compact-preview-label {
-    position: relative;
-}
-
-.theme-switcher {
-    position: relative;
-}
-
-.tooltip {
-    z-index: 1000;
-    position: absolute;
-    bottom: -50%;
-    transform: translateX(-100%);
-    background-color: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
-    white-space: nowrap;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
-}
-
-.theme-switcher:hover .tooltip,
-.compact-preview-label:hover .tooltip {
-    opacity: 1;
-    visibility: visible;
-}

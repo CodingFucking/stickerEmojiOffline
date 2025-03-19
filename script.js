@@ -49,6 +49,23 @@ function toggleTheme() {
     localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light'); // Сохранение темы в localStorage
 }
 
+function toggleMenu() {
+    const controlsContainer = document.getElementById('controlsContainer');
+    const burgerMenu = document.querySelector('.burger-menu');
+    controlsContainer.classList.toggle('active');
+    burgerMenu.classList.toggle('active');
+}
+
+function toggleCompactPreview() {
+    const checkbox = document.getElementById('compactPreview');
+    checkbox.checked = !checkbox.checked; // Переключаем состояние чекбокса
+    updatePreview(); // Вызываем функцию обновления превью
+
+    // Добавляем/убираем класс для стилизации активной кнопки
+    const button = document.querySelector('.compact-preview-button');
+    button.classList.toggle('active', checkbox.checked);
+}
+
 // Применение сохраненной темы при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
     const savedTheme = localStorage.getItem('theme');
@@ -76,7 +93,6 @@ function closeInstruction() {
         modal.style.display = 'none';
     }
 }
-
 
 // Открытие модального окна с примером
 function openExample() {
@@ -342,3 +358,5 @@ downloadAllButton.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     updatePreview();
 });
+
+

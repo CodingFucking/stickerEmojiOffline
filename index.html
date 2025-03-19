@@ -14,24 +14,22 @@
     <header>
         <h1 class="title">Генератор эмодзи</h1>
 
-        <div class="controls">
-            <!-- Кнопки для инструкции и примера -->
-            <div class="controls">
-                <button class="instruction-button" onclick="openInstruction()">📚 Инструкция</button>
-                <button class="example-button" onclick="openExample()">💻 Итог</button>
-                <button class="example-stick-button" onclick="openExampleStick()">📌 Индивидуальные стикеры</button>
-            </div>
+        <!-- Бургер-меню -->
+        <div class="burger-menu" onclick="toggleMenu()" aria-label="Открыть меню">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
 
-            <!-- Кнопки для смены темы и компактного просмотра -->
+        <!-- Контейнер для кнопок управления -->
+        <div class="controls-container" id="controlsContainer">
             <div class="controls">
-                <button class="theme-switcher" onclick="toggleTheme()">
-                    <span class="tooltip">Сменить тему</span>
+                <button class="example-stick-button" onclick="openExampleStick()" aria-label="Индивидуальные стикеры">📌 Индивидуальные стикеры</button>
+                <button class="instruction-button" onclick="openInstruction()" aria-label="Открыть инструкцию">Инструкция</button>
+                <button class="example-button" onclick="openExample()" aria-label="Показать пример">Итог</button>
+                <button class="theme-switcher" onclick="toggleTheme()" aria-label="Сменить тему">Сменить тему</button>
+                <button class="compact-preview-button" onclick="toggleCompactPreview()" aria-label="Без расстояния и рамок">Без расстояния и рамок<input type="checkbox" id="compactPreview" hidden>
                 </button>
-
-                <label class="compact-preview-label">
-                    <input type="checkbox" id="compactPreview" onchange="updatePreview()">
-                    <span class="tooltip">Без расстояния и рамок</span>
-                </label>
             </div>
         </div>
     </header>

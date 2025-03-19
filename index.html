@@ -3,314 +3,214 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Генератор эмодзи</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Roboto:wght@400;700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f0f0f0;
-            color: #333;
-            transition: background-color 0.3s, color 0.3s;
-        }
-        body.dark-theme {
-            background-color: #333;
-            color: #f0f0f0;
-        }
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            margin-bottom: 20px;
-            color: #007bff;
-        }
-        .theme-switcher {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .theme-switcher:hover {
-            background-color: #0056b3;
-        }
-        .form-container {
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 500px;
-            margin: 0 auto;
-        }
-        .form-container.dark-theme {
-            background: #444;
-            color: #f0f0f0;
-        }
-        label {
-            display: block;
-            margin: 8px 0 4px;
-            font-weight: bold;
-        }
-        input[type="text"], select, input[type="color"], input[type="number"] {
-            width: calc(100% - 16px);
-            padding: 6px;
-            margin-bottom: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-        .canvas-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .canvas-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 8px;
-        }
-        canvas {
-            border: 1px solid #ccc;
-            background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
-                              linear-gradient(-45deg, #ddd 25%, transparent 25%),
-                              linear-gradient(45deg, transparent 75%, #ddd 75%),
-                              linear-gradient(-45deg, transparent 75%, #ddd 75%);
-            background-size: 20px 20px;
-            background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
-        }
-        .download-link {
-            display: block;
-            color: #007bff;
-            text-decoration: none;
-            font-size: 14px;
-        }
-        .download-link:hover {
-            text-decoration: underline;
-        }
-        #downloadAll {
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            margin-top: 15px;
-            display: none; /* Скрываем кнопку по умолчанию */
-        }
-        #downloadAll:hover {
-            background-color: #0056b3;
-        }
-        .preview {
-            margin-top: 15px;
-            text-align: center;
-        }
-        .preview canvas {
-            margin: 8px;
-        }
-        .color-picker-container {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        .color-picker-container label {
-            margin: 0;
-        }
-        .color-picker-container input[type="color"] {
-            width: 50px;
-            height: 30px;
-            padding: 2px;
-        }
-        .row {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 8px;
-        }
-        .row label {
-            flex: 1;
-        }
-        .row input[type="number"] {
-            flex: 1;
-        }
-    </style>
+    <title>✈️ Генератор эмодзи</title>
+    <!-- Подключение шрифтов -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro&family=IBM+Plex+Mono&family=Ubuntu+Mono&family=PT+Mono&family=Fira+Code&family=Anonymous+Pro&family=Montserrat&family=Pixelify+Sans&family=Merriweather&family=Comfortaa&family=Unbounded&family=El+Messiri&family=Cormorant+Infant&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <button class="theme-switcher" onclick="toggleTheme()">Переключить тему</button>
-    <h1>Генератор эмодзи для Telegram</h1>
+
+    <!-- Шапка с заголовком и кнопками управления -->
+    <header>
+        <h1 class="title">Генератор эмодзи</h1>
+
+        <div class="controls">
+            <!-- Кнопки для инструкции и примера -->
+            <div class="controls">
+                <button class="instruction-button" onclick="openInstruction()">📚 Инструкция</button>
+                <button class="example-button" onclick="openExample()">💻 Итог</button>
+                <button class="example-stick-button" onclick="openExampleStick()">📌 Индивидуальные стикеры</button>
+            </div>
+
+            <!-- Кнопки для смены темы и компактного просмотра -->
+            <div class="controls">
+                <button class="theme-switcher" onclick="toggleTheme()">
+                    <span class="tooltip">Сменить тему</span>
+                </button>
+
+                <label class="compact-preview-label">
+                    <input type="checkbox" id="compactPreview" onchange="updatePreview()">
+                    <span class="tooltip">Без расстояния и рамок</span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+    <!-- Основная форма для ввода данных -->
     <div class="form-container">
         <form id="emojiForm">
-            <label for="word">Слово:</label>
-            <input type="text" id="word" name="word" required>
-            <br>
-            <label for="font">Шрифт:</label>
-            <select id="font" name="font">
-                <option value="Arial">Arial</option>
-                <option value="Times New Roman">Times New Roman</option>
-                <option value="Courier New">Courier New</option>
-                <option value="Verdana">Verdana</option>
-                <option value="Georgia">Georgia</option>
-                <option value="Comic Sans MS">Comic Sans MS</option>
-                <option value="Montserrat">Montserrat</option>
-                <option value="Roboto">Roboto</option>
-                <option value="Open Sans">Open Sans</option>
-            </select>
-            <br>
-            <div class="color-picker-container">
-                <label for="textColor">Цвет текста:</label>
-                <input type="color" id="textColor" name="textColor" value="#000000">
-                <label for="bgColor">Цвет подложки:</label>
-                <input type="color" id="bgColor" name="bgColor" value="#ffffff">
+            <!-- Группа для ввода текста и выбора шрифта -->
+            <div class="form-group inline-group">
+                <input type="text" id="word" placeholder="Введите слово" required>
+                <select id="font">
+                    <optgroup label="Моноширинные">
+                        <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                        <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                        <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
+                        <option value="'Ubuntu Mono', monospace">Ubuntu Mono</option>
+                        <option value="'PT Mono', monospace">PT Mono</option>
+                        <option value="'Fira Code', monospace">Fira Code</option>
+                        <option value="'Anonymous Pro', monospace">Anonymous Pro</option>
+                    </optgroup>
+                    <optgroup label="Обычные">
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Pixelify Sans', sans-serif">Pixelify Sans</option>
+                        <option value="'Merriweather', serif">Merriweather</option>
+                        <option value="'Comfortaa', cursive">Comfortaa</option>
+                        <option value="'Unbounded', cursive">Unbounded</option>
+                        <option value="'El Messiri', serif">El Messiri</option>
+                        <option value="'Cormorant Infant', serif">Cormorant Infant</option>
+                    </optgroup>
+                </select>
+
+                <!-- Кнопки для стилизации текста -->
+                <div class="style-buttons">
+                    <label class="style-button bold" onclick="toggleStyle('bold')">
+                        <span>T</span>
+                        <input type="checkbox" hidden id="boldText">
+                    </label>
+                    <label class="style-button italic" onclick="toggleStyle('italic')">
+                        <span>T</span>
+                        <input type="checkbox" hidden id="italicText">
+                    </label>
+                    <label class="style-button underline" onclick="toggleStyle('underline')">
+                        <span>T</span>
+                        <input type="checkbox" hidden id="underlineText">
+                    </label>
+                    <label class="style-button strike" onclick="toggleStyle('strike')">
+                        <span>T</span>
+                        <input type="checkbox" hidden id="strikeText">
+                    </label>
+                    <label class="style-button uppercase" onclick="toggleStyle('uppercase')">
+                        <span>t</span>
+                        <input type="checkbox" hidden id="uppercaseText">
+                    </label>
+                </div>
             </div>
-            <br>
-            <div class="row">
-                <label for="bgHeight">Высота подложки:</label>
-                <label for="rounding">Закругление:</label>
-                <label for="textSize">Размер текста:</label>
-                <label for="textOffset">Смещение текста:</label>
+
+            <!-- Выбор цвета фона и текста -->
+            <div class="color-picker-wrapper">
+                <div class="color-picker-container">
+                    <div class="row">
+                        <label>Фон</label>
+                        <label class="toggle-bg">
+                            <input type="checkbox" id="toggleBackground" checked onchange="toggleBackground()">
+                        </label>
+                    </div>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="bgColorType" value="solid" checked onclick="toggleBgColorType()"> Цвет
+                        </label>
+                        <label>
+                            <input type="radio" name="bgColorType" value="gradient" onclick="toggleBgColorType()"> Градиент
+                        </label>
+                    </div>
+                    <div id="bgSolidColorContainer">
+                        <input type="color" id="bgColor" name="bgColor" value="#ffffff">
+                    </div>
+                    <div id="bgGradientColorContainer" style="display: none;">
+                        <input type="color" id="bgColor1" name="bgColor1" value="#ffffff">
+                        <input type="color" id="bgColor2" name="bgColor2" value="#ffffff">
+                        <select id="bgGradientDirection" name="bgGradientDirection">
+                            <option value="to bottom">Сверху вниз</option>
+                            <option value="to top">Снизу вверх</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="color-picker-container">
+                    <label>Текст</label>
+                    <div class="row">
+                        <label>
+                            <input type="radio" name="textColorType" value="solid" checked onclick="toggleTextColorType()"> Цвет
+                        </label>
+                        <label>
+                            <input type="radio" name="textColorType" value="gradient" onclick="toggleTextColorType()"> Градиент
+                        </label>
+                    </div>
+                    <div id="textSolidColorContainer">
+                        <input type="color" id="textColor" name="textColor" value="#000000">
+                    </div>
+                    <div id="textGradientColorContainer" style="display: none;">
+                        <input type="color" id="textColor1" name="textColor1" value="#000000">
+                        <input type="color" id="textColor2" name="textColor2" value="#000000">
+                        <select id="textGradientDirection" name="textGradientDirection">
+                            <option value="to bottom">Сверху вниз</option>
+                            <option value="to top">Снизу вверх</option>
+                        </select>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                <input type="number" id="bgHeight" name="bgHeight" value="100" min="1" max="100">
-                <input type="number" id="rounding" name="rounding" value="20" min="0" max="50">
-                <input type="number" id="textSize" name="textSize" value="80" min="10" max="100">
-                <input type="number" id="textOffset" name="textOffset" value="0" min="-50" max="50">
+
+            <!-- Слайдеры для настройки высоты, размера, закругления и смещения -->
+            <div class="form-group slider-group">
+                <div class="slider-item">
+                    <h4>Высота</h4>
+                    <div class="slider-container">
+                        <input type="number" id="bgHeight" value="100" min="0" max="100">
+                        <input type="range" id="bgHeightRange" min="0" max="100" value="100">
+                    </div>
+                </div>
+                <div class="slider-item">
+                    <h4>Размер</h4>
+                    <div class="slider-container">
+                        <input type="number" id="textSize" value="80" min="10" max="100">
+                        <input type="range" id="textSizeRange" min="10" max="100" value="80">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group slider-group">
+                <div class="slider-item">
+                    <h4>Закругление</h4>
+                    <div class="slider-container">
+                        <input type="number" id="rounding" value="20" min="0" max="50">
+                        <input type="range" id="roundingRange" min="0" max="50" value="20">
+                    </div>
+                </div>
+                <div class="slider-item">
+                    <h4>Смещение</h4>
+                    <div class="slider-container">
+                        <input type="number" id="textOffset" value="0" min="-50" max="50">
+                        <input type="range" id="textOffsetRange" min="-50" max="50" value="0">
+                    </div>
+                </div>
             </div>
         </form>
     </div>
 
+    <!-- Модальные окна для инструкции и примера -->
+    <div id="instructionModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <iframe id="instructionFrame" src="doc.html" style="width: 100%; height: 80vh; border: none;"></iframe>
+        </div>
+    </div>
+
+    <div id="exampleModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExample()">&times;</span>
+            <img src="example.png" alt="Пример" style="width: 100%;">
+        </div>
+    </div>
+
+    <div id="exampleStickModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeExampleStick()">&times;</span>
+            <iframe id="exampleStickFrame" src="exampleStick.html" style="width:100%;height:80vh"></iframe>
+        </div>
+    </div>
+
+    <!-- Область предпросмотра и кнопка скачивания -->
     <div class="preview" id="previewContainer"></div>
     <div class="canvas-container" id="canvasContainer"></div>
     <button id="downloadAll">Скачать архив</button>
 
-    <!-- Подключаем библиотеку JSZip -->
+    <!-- Подключение внешних библиотек и скриптов -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-
-    <script>
-        const canvasContainer = document.getElementById('canvasContainer');
-        const previewContainer = document.getElementById('previewContainer');
-        const downloadAllButton = document.getElementById('downloadAll');
-        const wordInput = document.getElementById('word');
-        let images = []; // Массив для хранения данных изображений
-
-        // Функция для обновления превью
-        function updatePreview() {
-            const word = wordInput.value;
-            const fontFamily = document.getElementById('font').value;
-            const textColor = document.getElementById('textColor').value;
-            const bgColor = document.getElementById('bgColor').value;
-            const bgHeight = parseInt(document.getElementById('bgHeight').value);
-            const rounding = parseInt(document.getElementById('rounding').value);
-            const textSize = parseInt(document.getElementById('textSize').value);
-            const textOffset = parseInt(document.getElementById('textOffset').value);
-
-            previewContainer.innerHTML = ''; // Очищаем превью
-            images = []; // Очищаем массив изображений
-
-            if (word) {
-                const letters = word.split('');
-
-                letters.forEach((letter, index) => {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
-
-                    canvas.width = 100;
-                    canvas.height = 100;
-
-                    ctx.font = `${textSize}px ${fontFamily}`;
-                    ctx.textBaseline = 'middle';
-                    ctx.textAlign = 'center';
-
-                    ctx.fillStyle = bgColor;
-                    const yOffset = (canvas.height - bgHeight) / 2;
-
-                    if (index === 0 || index === letters.length - 1) {
-                        roundRect(ctx, 0, yOffset, canvas.width, bgHeight, rounding, index === 0, index === letters.length - 1);
-                    } else {
-                        ctx.fillRect(0, yOffset, canvas.width, bgHeight);
-                    }
-                    ctx.fill();
-
-                    ctx.fillStyle = textColor;
-                    // Центрируем текст по вертикали и горизонтали, учитывая смещение
-                    ctx.fillText(letter, canvas.width / 2, canvas.height / 2 + textOffset);
-
-                    // Сохраняем изображение в массив
-                    const dataURL = canvas.toDataURL('image/png');
-                    const fileName = `${index + 1}_${letter}_emoji.png`;
-                    images.push({ fileName, dataURL });
-
-                    previewContainer.appendChild(canvas);
-                });
-
-                // Показываем кнопку "Скачать архив", если введено хотя бы одно слово
-                downloadAllButton.style.display = 'block';
-            } else {
-                // Скрываем кнопку, если поле пустое
-                downloadAllButton.style.display = 'none';
-            }
-        }
-
-        // Обновляем превью при изменении параметров
-        document.getElementById('emojiForm').addEventListener('input', updatePreview);
-
-        // Обработчик для кнопки "Скачать архив"
-        downloadAllButton.addEventListener('click', () => {
-            const zip = new JSZip();
-            const folder = zip.folder("emojis");
-
-            images.forEach((img) => {
-                const base64Data = img.dataURL.split(',')[1];
-                folder.file(img.fileName, base64Data, { base64: true });
-            });
-
-            zip.generateAsync({ type: "blob" }).then((content) => {
-                saveAs(content, "emojis.zip");
-            });
-        });
-
-        // Функция для рисования прямоугольника с закругленными углами
-        function roundRect(ctx, x, y, width, height, radius, roundLeft, roundRight) {
-            ctx.beginPath();
-
-            ctx.moveTo(x + (roundLeft ? radius : 0), y);
-            ctx.lineTo(x + width - (roundRight ? radius : 0), y);
-
-            if (roundRight) {
-                ctx.arcTo(x + width, y, x + width, y + radius, radius);
-            }
-
-            ctx.lineTo(x + width, y + height - (roundRight ? radius : 0));
-
-            if (roundRight) {
-                ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-            }
-
-            ctx.lineTo(x + (roundLeft ? radius : 0), y + height);
-
-            if (roundLeft) {
-                ctx.arcTo(x, y + height, x, y + height - radius, radius);
-            }
-
-            ctx.lineTo(x, y + (roundLeft ? radius : 0));
-
-            if (roundLeft) {
-                ctx.arcTo(x, y, x + radius, y, radius);
-            }
-
-            ctx.closePath();
-        }
-
-        // Переключение темы
-        function toggleTheme() {
-            document.body.classList.toggle('dark-theme');
-            document.querySelector('.form-container').classList.toggle('dark-theme');
-        }
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.4/lottie.min.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>

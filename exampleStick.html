@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Индивидуальные стикеры</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.4/lottie.min.js"></script>
+    <style>
+        /* Общие стили из doc.html */
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+        
+        :root {
+            --background-color: #fefefe;
+            --text-color: #333;
+            --code-background: #f4f4f4;
+            --code-text: #333;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            font-family: 'Montserrat', sans-serif;
+            margin: 15px;
+            padding: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        h1, h2 {
+            color: var(--text-color);
+            margin: 20px 0;
+        }
+
+        /* Темная тема */
+        body.dark-theme {
+            --background-color: #444;
+            --text-color: #f0f0f0;
+            --code-background: #555;
+            --code-text: #f0f0f0;
+        }
+
+        /* Специфические стили для примеров */
+        .category {
+            margin-top: 30px;
+        }
+
+        .media-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: left;
+            margin: 15px 0;
+        }
+
+        .media-container img, 
+        .media-container video, 
+        .lottie-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            background: 
+                linear-gradient(45deg, var(--code-background) 25%, transparent 25%, transparent 75%, var(--code-background) 75%),
+                linear-gradient(45deg, var(--code-background) 25%, transparent 25%, transparent 75%, var(--code-background) 75%);
+            background-size: 20px 20px;
+            background-position: 0 0, 10px 10px;
+            object-fit: cover;
+        }
+
+        .media-container video {
+            autoplay: true;
+            loop: true;
+            muted: true;
+        }
+
+        a {
+            color: #0077cc; /* Цвет ссылки */
+            text-decoration: none; /* Убираем подчеркивание */
+            font-weight: bold; /* Жирный текст */
+        }
+        a:hover {
+            text-decoration: underline; /* Подчеркивание при наведении */
+        }
+    </style>
+</head>
+<body>
+    <h1>Индивидуальные стикеры</h1>
+    <p>Для заказа писать <a href="https://t.me/signmotionde" target="_blank">@signmotionde</a></p>
+    <div id="content"></div>
+
+
+    <script>
+        // Оригинальный скрипт для контента
+        const mediaData = {
+            "stick_6": ["exmp1.json", "exmp2.json", "exmp3.json", "exmp4.json", "exmp5.json"],
+            "stick_5": ["mov1.webm", "mov2.webm", "mov3.webm"],
+            "stick_1": ["img1.webp", "img2.webp", "img3.webp", "img4.webp"],
+            "stick_2": ["img1.png", "img2.png", "img3.png", "img4.png"],
+            "stick_3": ["img1.webp", "img2.webp", "img3.webp", "img4.webp"],
+            "stick_4": ["img1.webp", "img2.webp", "img3.webp", "img4.webp"]
+        };
+
+        const categoryNames = {
+            "stick_6": "Анимационные стикеры (Lottie)",
+            "stick_5": "Видео стикеры",
+            "stick_1": "Статичные стикеры 1",
+            "stick_2": "Статичные стикеры 2",
+            "stick_3": "Статичные стикеры 3",
+            "stick_4": "Статичные стикеры 4",
+        };
+
+        const contentDiv = document.getElementById("content");
+
+        Object.entries(mediaData).forEach(([category, files]) => {
+            const section = document.createElement("div");
+            section.classList.add("category");
+
+            const title = document.createElement("h2");
+            title.textContent = categoryNames[category] || category;
+            section.appendChild(title);
+
+            const mediaContainer = document.createElement("div");
+            mediaContainer.classList.add("media-container");
+
+            files.forEach(file => {
+                if (file.endsWith(".webm")) {
+                    const video = document.createElement("video");
+                    video.src = `src/${category}/${file}`;
+                    video.autoplay = true;
+                    video.loop = true;
+                    video.muted = true;
+                    mediaContainer.appendChild(video);
+                } else if (file.endsWith(".png") || file.endsWith(".webp")) {
+                    const img = document.createElement("img");
+                    img.src = `src/${category}/${file}`;
+                    mediaContainer.appendChild(img);
+                } else if (file.endsWith(".json")) {
+                    const lottieContainer = document.createElement("div");
+                    lottieContainer.classList.add("lottie-container");
+                    mediaContainer.appendChild(lottieContainer);
+                    
+                    fetch(`src/${category}/${file}`)
+                        .then(response => response.json())
+                        .then(animationData => {
+                            lottie.loadAnimation({
+                                container: lottieContainer,
+                                renderer: 'svg',
+                                loop: true,
+                                autoplay: true,
+                                animationData: animationData
+                            });
+                        });
+                }
+            });
+
+            section.appendChild(mediaContainer);
+            contentDiv.appendChild(section);
+        });
+
+            // Получаем параметр темы из URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const theme = urlParams.get('theme');
+
+            // Применяем тему
+            document.body.classList.toggle('dark-theme', theme === 'dark');
+
+    </script>
+</body>
+</html>

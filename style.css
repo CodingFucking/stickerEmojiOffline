@@ -76,6 +76,7 @@ body.dark-theme .compact-preview-label:hover {
 
 /* ==================== Заголовок ==================== */
 header {
+    position: relative;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -92,45 +93,77 @@ header {
     margin: 0;
     flex-grow: 1;
     text-align: left;
-    font-size: 3vw;
+    font-size: 25px;
 }
+
 
 /* ==================== Бургер-меню ==================== */
 .burger-menu {
-    display: flex;
-    flex-direction: column;
+    display: inline-block;
     cursor: pointer;
-    padding: 10px;
+    position: absolute; /* Позиционирование относительно шапки */
+    z-index: 100;
+    right: 5px; /* Отступ справа */
+    top: 50%; /* Центрирование по вертикали */
+    transform: translateY(-50%); /* Точное центрирование */
+    padding: 10px; /* Отступы для увеличения области клика */
+    background: transparent; /* Прозрачный фон */
+    border: none; /* Убираем границу */
 }
 
 .burger-menu .bar {
-    width: 25px;
-    height: 3px;
-    background-color: var(--primary-color); /* Цвет бургера как у заголовка */
-    margin: 4px 0;
-    transition: 0.4s;
+    display: block;
+    height: 2px; /* Толщина линии */
+    width: 25px; /* Ширина линии */
+    border-radius: 2px; /* Закругление углов */
+    background: var(--primary-color); /* Синий цвет */
+    transition: all 300ms ease-in-out;
+    position: relative;
 }
 
-/* Анимация бургер-меню */
-.burger-menu.active .bar:nth-child(1) {
-    transform: rotate(-45deg) translate(-5px, 6px);
+.burger-menu .bar::before,
+.burger-menu .bar::after {
+    content: "";
+    position: absolute;
+    width: 25px; /* Ширина линии */
+    height: 2px; /* Толщина линии */
+    background: var(--primary-color);
+    border-radius: 2px;
+    transition: all 300ms ease-in-out;
 }
 
-.burger-menu.active .bar:nth-child(2) {
-    opacity: 0;
+.burger-menu .bar::before {
+    top: -6px;
 }
 
-.burger-menu.active .bar:nth-child(3) {
-    transform: rotate(45deg) translate(-5px, -6px);
+.burger-menu .bar::after {
+    top: 6px;
 }
+
+/* Анимация при активации (добавлении класса active) */
+.burger-menu.active .bar {
+    background: transparent; /* Делаем центральную полоску прозрачной */
+}
+
+.burger-menu.active .bar::before {
+    top: 0;
+    transform: rotate(45deg); /* Поворот верхней палочки */
+}
+
+.burger-menu.active .bar::after {
+    top: 0;
+    transform: rotate(-45deg); /* Поворот нижней палочки */
+}
+
+
 
 /* ==================== Выпадающий список кнопок ==================== */
 .controls-container {
-    display: none; /* По умолчанию скрыт */
+    display: flex;
     flex-direction: column;
     position: absolute;
-    top: 100px; /* Отступ от верхнего края шапки */
-    right: 35px; /* Отступ от правого края, как у шапки */
+    top: 70px; /* Отступ от верхнего края шапки */
+    right: 0px; /* Отступ от правого края, как у шапки */
     background-color: var(--modal-background); /* Фон зависит от темы */
     border-radius: var(--border-radius-ui); /* Скругление углов */
     padding: 10px;
@@ -138,10 +171,18 @@ header {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Тень остаётся */
     min-width: 200px; /* Фиксированная ширина контейнера */
     color: var(--modal-text); /* Цвет текста зависит от темы */
+    
+    opacity: 0; /* Начальное состояние: невидимый */
+    transform: translateY(-10px); /* Смещение вверх */
+    visibility: hidden; /* Элемент скрыт, но не удалён */
+    transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
 }
 
+/* Показываем контейнер с плавной анимацией */
 .controls-container.active {
-    display: flex; /* Показываем при активации */
+    opacity: 1;
+    transform: translateY(0);
+    visibility: visible;
 }
 
 /* Общие стили для всех кнопок */
@@ -160,6 +201,7 @@ header {
     display: flex; /* Для выравнивания содержимого */
     align-items: center; /* Выравниваем текст и иконки по центру */
     justify-content: flex-start; /* Текст выравнивается по левому краю */
+    transition: background-color 0.2s ease;
 }
 
 /* Стили для hover-эффекта */
@@ -182,6 +224,8 @@ header {
 .compact-preview-button.active {
     background-color: var(--primary-hover); /* Пример стиля для активного состояния */
 }
+
+
 
 /* ==================== Контейнеры ==================== */
 .container,

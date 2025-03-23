@@ -1,0 +1,70 @@
+/* Подключение локальных шрифтов */
+@font-face {
+    font-family: 'Belcanto Modern';
+    src: url('./font/Belcanto-Modern.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Callysto';
+    src: url('./font/Callysto.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Drabina Solid';
+    src: url('./font/Drabina-Solid.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Flexi IBM VGA';
+    src: url('./font/Flexi_IBM_VGA_True.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Forest Smooth';
+    src: url('./font/ForestSmooth-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Literature Decor';
+    src: url('./font/Literature-Decor.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Postertoaster';
+    src: url('./font/Postertoaster.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Scumbria Bold';
+    src: url('./font/Scumbria Bold.otf') format('opentype');
+    font-weight: bold;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Scumbria Regular';
+    src: url('./font/Scumbria Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Serpantin';
+    src: url('./font/Serpantin.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}

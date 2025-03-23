@@ -50,10 +50,12 @@ function toggleTheme() {
 }
 
 function toggleMenu() {
-    const controlsContainer = document.getElementById('controlsContainer');
     const burgerMenu = document.querySelector('.burger-menu');
-    controlsContainer.classList.toggle('active');
     burgerMenu.classList.toggle('active');
+
+    // Открытие/закрытие меню (если нужно)
+    const controlsContainer = document.getElementById('controlsContainer');
+    controlsContainer.classList.toggle('active');
 }
 
 function toggleCompactPreview() {

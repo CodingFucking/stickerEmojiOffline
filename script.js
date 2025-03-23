@@ -74,6 +74,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (savedTheme === 'dark') {
         document.body.classList.add('dark-theme');
     }
+
+    // Добавляем обработчики событий для всех кнопок
+    document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
+    document.querySelector('.example-stick-button').addEventListener('click', openExampleStick);
+    document.querySelector('.instruction-button').addEventListener('click', openInstruction);
+    document.querySelector('.example-button').addEventListener('click', openExample);
+    document.querySelector('.theme-switcher').addEventListener('click', toggleTheme);
+    document.querySelector('.compact-preview-button').addEventListener('click', toggleCompactPreview);
 });
 
 // Открытие модального окна с инструкцией
@@ -130,6 +138,7 @@ function closeExampleStick() {
         modal.style.display = 'none';
     }
 }
+
 // Общий обработчик для закрытия всех модальных окон по клику вне их области
 window.onclick = function(event) {
     document.querySelectorAll('.modal').forEach(modal => {
@@ -138,6 +147,17 @@ window.onclick = function(event) {
         }
     });
 };
+
+// Закрытие модальных окон по клику на кнопку "×"
+document.querySelectorAll('.close').forEach(button => {
+    button.addEventListener('click', (e) => {
+        const modal = e.target.closest('.modal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    });
+});
+
 
 // Переключение типа фона (сплошной/градиент)
 function toggleBgColorType() {
@@ -360,5 +380,3 @@ downloadAllButton.addEventListener('click', () => {
 document.addEventListener('DOMContentLoaded', () => {
     updatePreview();
 });
-
-

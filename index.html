@@ -3,13 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Генератор эмодзи</title>
     <!-- Подключение favicon с эмодзи самолётика -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
     <!-- Подключение шрифтов -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro&family=IBM+Plex+Mono&family=Ubuntu+Mono&family=PT+Mono&family=Fira+Code&family=Anonymous+Pro&family=Courier+Prime&family=Inconsolata&family=JetBrains+Mono&family=Montserrat&family=Open+Sans&family=Roboto&family=Lato&family=Raleway&family=PT+Sans&family=Merriweather&family=Playfair+Display&family=Lora&family=Noto+Sans&family=Noto+Serif&family=Rubik&family=Inter&family=Manrope&family=Jost&family=Oswald&family=Comfortaa&family=El+Messiri&family=Cormorant+Infant&family=Yanone+Kaffeesatz&family=Tinos&family=Source+Sans+Pro&family=Ubuntu&family=Fira+Sans&family=Exo+2&family=Nunito&family=Poppins&family=Quicksand&display=swap" rel="stylesheet">
-
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fonts.css">
 </head>
@@ -20,19 +18,18 @@
         <h1 class="title">Генератор эмодзи</h1>
 
         <!-- Бургер-меню -->
-        <div class="burger-menu" onclick="toggleMenu()">
+        <div class="burger-menu">
             <div class="bar"></div>
         </div>
 
         <!-- Контейнер для кнопок управления -->
         <div class="controls-container" id="controlsContainer">
             <div class="controls">
-                <button class="example-stick-button" onclick="openExampleStick()" aria-label="Индивидуальные стикеры">📌 Индивидуальные стикеры</button>
-                <button class="instruction-button" onclick="openInstruction()" aria-label="Открыть инструкцию">Инструкция</button>
-                <button class="example-button" onclick="openExample()" aria-label="Показать пример">Итог</button>
-                <button class="theme-switcher" onclick="toggleTheme()" aria-label="Сменить тему">Сменить тему</button>
-                <button class="compact-preview-button" onclick="toggleCompactPreview()" aria-label="Без расстояния и рамок">Без расстояния и рамок<input type="checkbox" id="compactPreview" hidden>
-                </button>
+                <button class="example-stick-button" aria-label="Индивидуальные стикеры">📌 Индивидуальные стикеры</button>
+                <button class="instruction-button" aria-label="Открыть инструкцию">Инструкция</button>
+                <button class="example-button" aria-label="Показать пример">Итог</button>
+                <button class="theme-switcher" aria-label="Сменить тему">Сменить тему</button>
+                <button class="compact-preview-button" aria-label="Без расстояния и рамок">Без расстояния и рамок<input type="checkbox" id="compactPreview" hidden></button>
             </div>
         </div>
     </header>
@@ -43,79 +40,78 @@
             <!-- Группа для ввода текста и выбора шрифта -->
             <div class="form-group inline-group">
                 <input type="text" id="word" placeholder="Введите слово" required>
+                <select id="font">
+                    <!-- Моноширинные шрифты -->
+                    <optgroup label="Моноширинные">
+                        <option value="'Ubuntu Mono', monospace" selected>Ubuntu Mono</option>
+                        <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                        <option value="'Source Code Pro', monospace">Source Code Pro</option>
+                        <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
+                        <option value="'PT Mono', monospace">PT Mono</option>
+                        <option value="'Fira Code', monospace">Fira Code</option>
+                        <option value="'Anonymous Pro', monospace">Anonymous Pro</option>
+                        <option value="'Courier Prime', monospace">Courier Prime</option>
+                        <option value="'Inconsolata', monospace">Inconsolata</option>
+                        <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
+                    </optgroup>
 
-            <select id="font">
-                <!-- Моноширинные шрифты -->
-                <optgroup label="Моноширинные">
-                    <option value="'Ubuntu Mono', monospace" selected>Ubuntu Mono</option> <!-- По умолчанию -->
-                    <option value="'Roboto Mono', monospace">Roboto Mono</option>
-                    <option value="'Source Code Pro', monospace">Source Code Pro</option>
-                    <option value="'IBM Plex Mono', monospace">IBM Plex Mono</option>
-                    <option value="'PT Mono', monospace">PT Mono</option>
-                    <option value="'Fira Code', monospace">Fira Code</option>
-                    <option value="'Anonymous Pro', monospace">Anonymous Pro</option>
-                    <option value="'Courier Prime', monospace">Courier Prime</option>
-                    <option value="'Inconsolata', monospace">Inconsolata</option>
-                    <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
-                </optgroup>
+                    <!-- Шрифты, поддерживающие и кириллицу, и латиницу -->
+                    <optgroup label="Кириллица и латиница">
+                        <option value="'El Messiri', serif">El Messiri</option>
+                        <option value="'Cormorant Infant', serif">Cormorant Infant</option>
+                        <option value="'Yanone Kaffeesatz', sans-serif">Yanone Kaffeesatz</option>
+                        <option value="'Jost', sans-serif">Jost</option>
+                        <option value="'Comfortaa', cursive">Comfortaa</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'PT Sans', sans-serif">PT Sans</option>
+                        <option value="'Merriweather', serif">Merriweather</option>
+                        <option value="'Playfair Display', serif">Playfair Display</option>
+                        <option value="'Lora', serif">Lora</option>
+                        <option value="'Noto Sans', sans-serif">Noto Sans</option>
+                        <option value="'Noto Serif', serif">Noto Serif</option>
+                        <option value="'Inter', sans-serif">Inter</option>
+                        <option value="'Manrope', sans-serif">Manrope</option>
+                        <option value="'Oswald', sans-serif">Oswald</option>
+                        <option value="'Tinos', serif">Tinos</option>
+                        <option value="'Ubuntu', sans-serif">Ubuntu</option>
+                        <option value="'Nunito', sans-serif">Nunito</option>
+                        <option value="'Poppins', sans-serif">Poppins</option>
+                    </optgroup>
 
-                <!-- Шрифты, поддерживающие и кириллицу, и латиницу -->
-                <optgroup label="Кириллица и латиница">
-                    <option value="'El Messiri', serif">El Messiri</option>
-                    <option value="'Cormorant Infant', serif">Cormorant Infant</option>
-                    <option value="'Yanone Kaffeesatz', sans-serif">Yanone Kaffeesatz</option>
-                    <option value="'Jost', sans-serif">Jost</option>
-                    <option value="'Comfortaa', cursive">Comfortaa</option>
-                    <option value="'Montserrat', sans-serif">Montserrat</option>
-                    <option value="'PT Sans', sans-serif">PT Sans</option>
-                    <option value="'Merriweather', serif">Merriweather</option>
-                    <option value="'Playfair Display', serif">Playfair Display</option>
-                    <option value="'Lora', serif">Lora</option>
-                    <option value="'Noto Sans', sans-serif">Noto Sans</option>
-                    <option value="'Noto Serif', serif">Noto Serif</option>
-                    <option value="'Inter', sans-serif">Inter</option>
-                    <option value="'Manrope', sans-serif">Manrope</option>
-                    <option value="'Oswald', sans-serif">Oswald</option>
-                    <option value="'Tinos', serif">Tinos</option>
-                    <option value="'Ubuntu', sans-serif">Ubuntu</option>
-                    <option value="'Nunito', sans-serif">Nunito</option>
-                    <option value="'Poppins', sans-serif">Poppins</option>
-                </optgroup>
-
-                <!-- Дополнительные локальные шрифты -->
-                <optgroup label="Дополнительные">
-                    <option value="'Belcanto Modern', serif">Belcanto Modern</option>
-                    <option value="'Callysto', sans-serif">Callysto</option>
-                    <option value="'Drabina Solid', sans-serif">Drabina Solid</option>
-                    <option value="'Flexi IBM VGA', monospace">Flexi IBM VGA</option>
-                    <option value="'Forest Smooth', sans-serif">Forest Smooth</option>
-                    <option value="'Literature Decor', serif">Literature Decor</option>
-                    <option value="'Postertoaster', sans-serif">Postertoaster</option>
-                    <option value="'Scumbria Bold', sans-serif">Scumbria Bold</option>
-                    <option value="'Scumbria Regular', sans-serif">Scumbria Regular</option>
-                    <option value="'Serpantin', serif">Serpantin</option>
-                </optgroup>
-            </select>
+                    <!-- Дополнительные локальные шрифты -->
+                    <optgroup label="Дополнительные">
+                        <option value="'Belcanto Modern', serif">Belcanto Modern</option>
+                        <option value="'Callysto', sans-serif">Callysto</option>
+                        <option value="'Drabina Solid', sans-serif">Drabina Solid</option>
+                        <option value="'Flexi IBM VGA', monospace">Flexi IBM VGA</option>
+                        <option value="'Forest Smooth', sans-serif">Forest Smooth</option>
+                        <option value="'Literature Decor', serif">Literature Decor</option>
+                        <option value="'Postertoaster', sans-serif">Postertoaster</option>
+                        <option value="'Scumbria Bold', sans-serif">Scumbria Bold</option>
+                        <option value="'Scumbria Regular', sans-serif">Scumbria Regular</option>
+                        <option value="'Serpantin', serif">Serpantin</option>
+                    </optgroup>
+                </select>
 
                 <!-- Кнопки для стилизации текста -->
                 <div class="style-buttons">
-                    <label class="style-button bold" onclick="toggleStyle('bold')">
+                    <label class="style-button bold">
                         <span>T</span>
                         <input type="checkbox" hidden id="boldText">
                     </label>
-                    <label class="style-button italic" onclick="toggleStyle('italic')">
+                    <label class="style-button italic">
                         <span>T</span>
                         <input type="checkbox" hidden id="italicText">
                     </label>
-                    <label class="style-button underline" onclick="toggleStyle('underline')">
+                    <label class="style-button underline">
                         <span>T</span>
                         <input type="checkbox" hidden id="underlineText">
                     </label>
-                    <label class="style-button strike" onclick="toggleStyle('strike')">
+                    <label class="style-button strike">
                         <span>T</span>
                         <input type="checkbox" hidden id="strikeText">
                     </label>
-                    <label class="style-button uppercase" onclick="toggleStyle('uppercase')">
+                    <label class="style-button uppercase">
                         <span>t</span>
                         <input type="checkbox" hidden id="uppercaseText">
                     </label>
@@ -128,15 +124,15 @@
                     <div class="row">
                         <label>Фон</label>
                         <label class="toggle-bg">
-                            <input type="checkbox" id="toggleBackground" checked onchange="toggleBackground()">
+                            <input type="checkbox" id="toggleBackground" checked>
                         </label>
                     </div>
                     <div class="row">
                         <label>
-                            <input type="radio" name="bgColorType" value="solid" checked onclick="toggleBgColorType()"> Цвет
+                            <input type="radio" name="bgColorType" value="solid" checked> Цвет
                         </label>
                         <label>
-                            <input type="radio" name="bgColorType" value="gradient" onclick="toggleBgColorType()"> Градиент
+                            <input type="radio" name="bgColorType" value="gradient"> Градиент
                         </label>
                     </div>
                     <div id="bgSolidColorContainer">
@@ -156,10 +152,10 @@
                     <label>Текст</label>
                     <div class="row">
                         <label>
-                            <input type="radio" name="textColorType" value="solid" checked onclick="toggleTextColorType()"> Цвет
+                            <input type="radio" name="textColorType" value="solid" checked> Цвет
                         </label>
                         <label>
-                            <input type="radio" name="textColorType" value="gradient" onclick="toggleTextColorType()"> Градиент
+                            <input type="radio" name="textColorType" value="gradient"> Градиент
                         </label>
                     </div>
                     <div id="textSolidColorContainer">
@@ -216,21 +212,21 @@
     <!-- Модальные окна для инструкции и примера -->
     <div id="instructionModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeInstruction()">&times;</span>
+            <span class="close">&times;</span>
             <iframe id="instructionFrame" src="doc.html" style="width: 100%; height: 80vh; border: none;"></iframe>
         </div>
     </div>
 
     <div id="exampleModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeExample()">&times;</span>
+            <span class="close">&times;</span>
             <img src="example.png" alt="Пример" style="width: 100%;">
         </div>
     </div>
 
     <div id="exampleStickModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeExampleStick()">&times;</span>
+            <span class="close">&times;</span>
             <iframe id="exampleStickFrame" src="exampleStick.html" style="width:100%;height:80vh; border: none;"></iframe>
         </div>
     </div>

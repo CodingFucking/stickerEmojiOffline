@@ -17,53 +17,46 @@ const themeSwitcher = document.querySelector('.theme-switcher');
 const form = document.getElementById('emojiForm');
 
 // Обработчики событий
-form.addEventListener('input', updatePreview); // Обновление превью при изменении формы
-compactPreviewCheckbox.addEventListener('change', updatePreview); // Обновление превью при изменении компактного режима
+form.addEventListener('input', updatePreview);
+compactPreviewCheckbox.addEventListener('change', updatePreview);
 fontSelect.addEventListener('change', () => {
-    document.fonts.load(`1em ${fontSelect.value}`).then(updatePreview); // Загрузка шрифта и обновление превью
+    document.fonts.load(`1em ${fontSelect.value}`).then(updatePreview);
 });
 
 // Связь ползунков с инпутами
 document.querySelectorAll('input[type="range"]').forEach(slider => {
     slider.addEventListener('input', e => {
         document.getElementById(e.target.id.replace('Range', '')).value = e.target.value;
-        updatePreview(); // Обновление превью при изменении ползунка
+        updatePreview();
     });
 });
 
 // Переключение фона
 function toggleBackground() {
     const bgEnabled = document.getElementById('toggleBackground').checked;
-
-    // Управление видимостью элементов
     document.querySelectorAll('.color-picker-wrapper, #bgHeight, #rounding')
         .forEach(el => el.style.display = bgEnabled ? 'flex' : 'none');
-
-    updatePreview(); // Принудительное обновление превью
+    updatePreview();
 }
 
 // Переключение темы
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDarkTheme = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light'); // Сохранение темы в localStorage
+    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
 }
 
 function toggleMenu() {
     const burgerMenu = document.querySelector('.burger-menu');
     burgerMenu.classList.toggle('active');
-
-    // Открытие/закрытие меню (если нужно)
     const controlsContainer = document.getElementById('controlsContainer');
     controlsContainer.classList.toggle('active');
 }
 
 function toggleCompactPreview() {
     const checkbox = document.getElementById('compactPreview');
-    checkbox.checked = !checkbox.checked; // Переключаем состояние чекбокса
-    updatePreview(); // Вызываем функцию обновления превью
-
-    // Добавляем/убираем класс для стилизации активной кнопки
+    checkbox.checked = !checkbox.checked;
+    updatePreview();
     const button = document.querySelector('.compact-preview-button');
     button.classList.toggle('active', checkbox.checked);
 }
@@ -75,7 +68,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.add('dark-theme');
     }
 
-    // Добавляем обработчики событий для всех кнопок
     document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
     document.querySelector('.example-stick-button').addEventListener('click', openExampleStick);
     document.querySelector('.instruction-button').addEventListener('click', openInstruction);
@@ -84,109 +76,89 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelector('.compact-preview-button').addEventListener('click', toggleCompactPreview);
 });
 
-// Открытие модального окна с инструкцией
+// Модальные окна
 function openInstruction() {
     const modal = document.getElementById('instructionModal');
     const iframe = document.getElementById('instructionFrame');
-
-    // Передача текущей темы в URL
     const isDarkTheme = document.body.classList.contains('dark-theme');
     iframe.src = `doc.html?theme=${isDarkTheme ? 'dark' : 'light'}`;
-
-    modal.style.display = 'block'; // Показ модального окна
+    modal.style.display = 'block';
 }
 
-// Закрытие модального окна с инструкцией
 function closeInstruction() {
     const modal = document.getElementById('instructionModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    if (modal) modal.style.display = 'none';
 }
 
-// Открытие модального окна с примером
 function openExample() {
     const modal = document.getElementById('exampleModal');
-    if (modal) {
-        modal.style.display = 'block';
-    }
+    if (modal) modal.style.display = 'block';
 }
 
-// Закрытие модального окна с примером
 function closeExample() {
     const modal = document.getElementById('exampleModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    if (modal) modal.style.display = 'none';
 }
 
 function openExampleStick() {
     const modal = document.getElementById('exampleStickModal');
     const iframe = document.getElementById('exampleStickFrame');
-
-    // Передача текущей темы в URL
     const isDarkTheme = document.body.classList.contains('dark-theme');
     iframe.src = `exampleStick.html?theme=${isDarkTheme ? 'dark' : 'light'}`;
-
-    modal.style.display = 'block'; // Показ модального окна
+    modal.style.display = 'block';
 }
 
-// Закрытие модального окна с примером
 function closeExampleStick() {
     const modal = document.getElementById('exampleStickModal');
-    if (modal) {
-        modal.style.display = 'none';
-    }
+    if (modal) modal.style.display = 'none';
 }
 
-// Общий обработчик для закрытия всех модальных окон по клику вне их области
 window.onclick = function(event) {
     document.querySelectorAll('.modal').forEach(modal => {
-        if (event.target === modal) {
-            modal.style.display = "none";
-        }
+        if (event.target === modal) modal.style.display = "none";
     });
 };
 
-// Закрытие модальных окон по клику на кнопку "×"
 document.querySelectorAll('.close').forEach(button => {
     button.addEventListener('click', (e) => {
         const modal = e.target.closest('.modal');
-        if (modal) {
-            modal.style.display = 'none';
-        }
+        if (modal) modal.style.display = 'none';
     });
 });
 
+// Переключение типа цвета
+document.querySelectorAll('input[name="bgColorType"]').forEach(radio => {
+    radio.addEventListener('change', toggleBgColorType);
+});
 
-// Переключение типа фона (сплошной/градиент)
+document.querySelectorAll('input[name="textColorType"]').forEach(radio => {
+    radio.addEventListener('change', toggleTextColorType);
+});
+
 function toggleBgColorType() {
     const bgSolid = document.getElementById('bgSolidColorContainer');
     const bgGradient = document.getElementById('bgGradientColorContainer');
     const bgType = document.querySelector('input[name="bgColorType"]:checked').value;
-
     bgSolid.style.display = bgType === "solid" ? "flex" : "none";
     bgGradient.style.display = bgType === "gradient" ? "flex" : "none";
+    updatePreview();
 }
 
-// Переключение типа цвета текста (сплошной/градиент)
 function toggleTextColorType() {
     const textSolid = document.getElementById('textSolidColorContainer');
     const textGradient = document.getElementById('textGradientColorContainer');
     const textType = document.querySelector('input[name="textColorType"]:checked').value;
-
     textSolid.style.display = textType === "solid" ? "flex" : "none";
     textGradient.style.display = textType === "gradient" ? "flex" : "none";
+    updatePreview();
 }
 
-// Переключение стилей текста (жирный, курсив и т.д.)
 function toggleStyle(type) {
     const button = document.querySelector(`.style-button.${type}`);
     const checkbox = document.getElementById(`${type}Text`);
-
-    checkbox.checked = !checkbox.checked; // Инвертирование состояния
-    button.classList.toggle('active', checkbox.checked); // Добавление/удаление класса active
-    updatePreview(); // Обновление превью
+    checkbox.checked = !checkbox.checked;
+    button.classList.toggle('active', checkbox.checked);
+    updatePreview();
 }
 
 // Обновление превью
@@ -210,8 +182,8 @@ function updatePreview() {
     const compactPreview = compactPreviewCheckbox.checked;
     const bgEnabled = document.getElementById('toggleBackground').checked;
 
-    previewContainer.innerHTML = ''; // Очистка превью
-    images = []; // Очистка массива изображений
+    previewContainer.innerHTML = '';
+    images = [];
 
     if (word) {
         const letters = word.split('');
@@ -219,11 +191,10 @@ function updatePreview() {
         letters.forEach((letter, index) => {
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
+            canvas.width = 100;
+            canvas.height = 100;
 
-            canvas.width = 100; // Фиксированная ширина
-            canvas.height = 100; // Фиксированная высота
-
-            // Рисование фона (если включен)
+            // Рисование фона
             if (bgEnabled) {
                 if (bgColorType === "solid") {
                     ctx.fillStyle = bgColor;
@@ -256,28 +227,24 @@ function updatePreview() {
 
             const textMetrics = ctx.measureText(letter);
             const baselineY = (canvas.height / 2) + textOffset;
-
             ctx.fillText(letter, canvas.width / 2, baselineY);
 
             // Подчеркивание и зачеркивание
             if (underlineText.checked || strikeText.checked) {
                 ctx.strokeStyle = ctx.fillStyle;
                 ctx.beginPath();
-
                 if (underlineText.checked) {
                     ctx.moveTo(0, baselineY + (textSize * 0.35));
                     ctx.lineTo(100, baselineY + (textSize * 0.35));
                 }
-
                 if (strikeText.checked) {
                     ctx.moveTo(0, baselineY);
                     ctx.lineTo(100, baselineY);
                 }
-
                 ctx.stroke();
             }
 
-            // Создание финального канваса с обрезкой
+            // Создание финального канваса
             const finalCanvas = document.createElement('canvas');
             finalCanvas.width = canvas.width;
             finalCanvas.height = canvas.height;
@@ -292,12 +259,9 @@ function updatePreview() {
             }
 
             finalCtx.drawImage(canvas, 0, 0);
-
-            // Сохранение изображения
             const dataURL = finalCanvas.toDataURL('image/png');
             const fileName = `${index + 1}_${letter}_emoji.png`;
             images.push({ fileName, dataURL });
-
             previewContainer.appendChild(finalCanvas);
         });
 
@@ -323,54 +287,36 @@ function updatePreview() {
             });
         }
 
-        downloadAllButton.style.display = 'block'; // Показ кнопки скачивания
+        downloadAllButton.style.display = 'block';
     } else {
-        downloadAllButton.style.display = 'none'; // Скрытие кнопки скачивания
+        downloadAllButton.style.display = 'none';
     }
 }
 
 // Функция для рисования прямоугольника с закругленными углами
 function roundRect(ctx, x, y, width, height, radius, roundLeft, roundRight) {
     ctx.beginPath();
-
     ctx.moveTo(x + (roundLeft ? radius : 0), y);
     ctx.lineTo(x + width - (roundRight ? radius : 0), y);
 
-    if (roundRight) {
-        ctx.arcTo(x + width, y, x + width, y + radius, radius);
-    }
-
+    if (roundRight) ctx.arcTo(x + width, y, x + width, y + radius, radius);
     ctx.lineTo(x + width, y + height - (roundRight ? radius : 0));
-
-    if (roundRight) {
-        ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
-    }
-
+    if (roundRight) ctx.arcTo(x + width, y + height, x + width - radius, y + height, radius);
     ctx.lineTo(x + (roundLeft ? radius : 0), y + height);
-
-    if (roundLeft) {
-        ctx.arcTo(x, y + height, x, y + height - radius, radius);
-    }
-
+    if (roundLeft) ctx.arcTo(x, y + height, x, y + height - radius, radius);
     ctx.lineTo(x, y + (roundLeft ? radius : 0));
-
-    if (roundLeft) {
-        ctx.arcTo(x, y, x + radius, y, radius);
-    }
-
+    if (roundLeft) ctx.arcTo(x, y, x + radius, y, radius);
     ctx.closePath();
 }
 
-// Скачивание архива с изображениями
+// Скачивание архива
 downloadAllButton.addEventListener('click', () => {
     const zip = new JSZip();
     const folder = zip.folder("emojis_" + wordInput.value);
-
     images.forEach((img) => {
         const base64Data = img.dataURL.split(',')[1];
         folder.file(img.fileName, base64Data, { base64: true });
     });
-
     zip.generateAsync({ type: "blob" }).then((content) => {
         saveAs(content, "emojis_" + wordInput.value + ".zip");
     });
@@ -379,4 +325,6 @@ downloadAllButton.addEventListener('click', () => {
 // Инициализация
 document.addEventListener('DOMContentLoaded', () => {
     updatePreview();
+    toggleBgColorType();
+    toggleTextColorType();
 });

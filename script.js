@@ -1,37 +1,98 @@
-// Получаем элементы DOM
-const canvasContainer = document.getElementById('canvasContainer');
-const previewContainer = document.getElementById('previewContainer');
-const downloadAllButton = document.getElementById('downloadAll');
-const wordInput = document.getElementById('word');
-const fontSelect = document.getElementById('font');
-const boldText = document.getElementById('boldText');
-const italicText = document.getElementById('italicText');
-const underlineText = document.getElementById('underlineText');
-const strikeText = document.getElementById('strikeText');
-const uppercaseText = document.getElementById('uppercaseText');
-const compactPreviewCheckbox = document.getElementById('compactPreview');
+// DOM Elements
+const elements = {
+    canvasContainer: document.getElementById('canvasContainer'),
+    previewContainer: document.getElementById('previewContainer'),
+    downloadAllButton: document.getElementById('downloadAll'),
+    wordInput: document.getElementById('word'),
+    fontSelect: document.getElementById('font'),
+    boldText: document.getElementById('boldText'),
+    italicText: document.getElementById('italicText'),
+    underlineText: document.getElementById('underlineText'),
+    strikeText: document.getElementById('strikeText'),
+    uppercaseText: document.getElementById('uppercaseText'),
+    compactPreviewCheckbox: document.getElementById('compactPreview'),
+    styleButtons: document.querySelectorAll('.style-button'),
+    themeSwitcher: document.querySelector('.theme-switcher'),
+    form: document.getElementById('emojiForm')
+};
 
 let images = []; // Массив для хранения изображений
 
-const themeSwitcher = document.querySelector('.theme-switcher');
-const form = document.getElementById('emojiForm');
-
-// Обработчики событий
-form.addEventListener('input', updatePreview);
-compactPreviewCheckbox.addEventListener('change', updatePreview);
-fontSelect.addEventListener('change', () => {
-    document.fonts.load(`1em ${fontSelect.value}`).then(updatePreview);
+// Инициализация при загрузке
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    initEventListeners();
+    updatePreview();
+    toggleBgColorType();
+    toggleTextColorType();
 });
 
-// Связь ползунков с инпутами
-document.querySelectorAll('input[type="range"]').forEach(slider => {
-    slider.addEventListener('input', e => {
-        document.getElementById(e.target.id.replace('Range', '')).value = e.target.value;
-        updatePreview();
+// Инициализация темы
+function initTheme() {
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-theme');
+    }
+}
+
+// Инициализация обработчиков событий
+function initEventListeners() {
+    // Основные элементы формы
+    elements.form.addEventListener('input', updatePreview);
+    elements.compactPreviewCheckbox.addEventListener('change', updatePreview);
+    elements.fontSelect.addEventListener('change', () => {
+        document.fonts.load(`1em ${elements.fontSelect.value}`).then(updatePreview);
     });
-});
 
-// Переключение фона
+    // Кнопки стилизации
+    elements.styleButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const checkbox = this.querySelector('input[type="checkbox"]');
+            checkbox.checked = !checkbox.checked;
+            this.classList.toggle('active', checkbox.checked);
+            updatePreview();
+        });
+    });
+
+    // Связь ползунков с инпутами
+    document.querySelectorAll('input[type="range"]').forEach(slider => {
+        slider.addEventListener('input', e => {
+            document.getElementById(e.target.id.replace('Range', '')).value = e.target.value;
+            updatePreview();
+        });
+    });
+
+    // Переключатели цветов
+    document.querySelectorAll('input[name="bgColorType"]').forEach(radio => {
+        radio.addEventListener('change', toggleBgColorType);
+    });
+    document.querySelectorAll('input[name="textColorType"]').forEach(radio => {
+        radio.addEventListener('change', toggleTextColorType);
+    });
+
+    // Кнопки управления
+    document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
+    document.querySelector('.example-stick-button').addEventListener('click', openExampleStick);
+    document.querySelector('.instruction-button').addEventListener('click', openInstruction);
+    document.querySelector('.example-button').addEventListener('click', openExample);
+    elements.themeSwitcher.addEventListener('click', toggleTheme);
+    document.querySelector('.compact-preview-button').addEventListener('click', toggleCompactPreview);
+
+    // Модальные окна
+    document.querySelectorAll('.close').forEach(btn => {
+        btn.addEventListener('click', closeModals);
+    });
+
+    window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+            closeModals();
+        }
+    });
+
+    // Кнопка скачивания
+    elements.downloadAllButton.addEventListener('click', downloadAllImages);
+}
+
+// Функции управления интерфейсом
 function toggleBackground() {
     const bgEnabled = document.getElementById('toggleBackground').checked;
     document.querySelectorAll('.color-picker-wrapper, #bgHeight, #rounding')
@@ -39,101 +100,22 @@ function toggleBackground() {
     updatePreview();
 }
 
-// Переключение темы
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
-    const isDarkTheme = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+    localStorage.setItem('theme', document.body.classList.contains('dark-theme') ? 'dark' : 'light');
 }
 
 function toggleMenu() {
     const burgerMenu = document.querySelector('.burger-menu');
     burgerMenu.classList.toggle('active');
-    const controlsContainer = document.getElementById('controlsContainer');
-    controlsContainer.classList.toggle('active');
+    document.getElementById('controlsContainer').classList.toggle('active');
 }
 
 function toggleCompactPreview() {
-    const checkbox = document.getElementById('compactPreview');
-    checkbox.checked = !checkbox.checked;
+    elements.compactPreviewCheckbox.checked = !elements.compactPreviewCheckbox.checked;
     updatePreview();
-    const button = document.querySelector('.compact-preview-button');
-    button.classList.toggle('active', checkbox.checked);
+    document.querySelector('.compact-preview-button').classList.toggle('active', elements.compactPreviewCheckbox.checked);
 }
-
-// Применение сохраненной темы при загрузке страницы
-document.addEventListener('DOMContentLoaded', () => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') {
-        document.body.classList.add('dark-theme');
-    }
-
-    document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
-    document.querySelector('.example-stick-button').addEventListener('click', openExampleStick);
-    document.querySelector('.instruction-button').addEventListener('click', openInstruction);
-    document.querySelector('.example-button').addEventListener('click', openExample);
-    document.querySelector('.theme-switcher').addEventListener('click', toggleTheme);
-    document.querySelector('.compact-preview-button').addEventListener('click', toggleCompactPreview);
-});
-
-// Модальные окна
-function openInstruction() {
-    const modal = document.getElementById('instructionModal');
-    const iframe = document.getElementById('instructionFrame');
-    const isDarkTheme = document.body.classList.contains('dark-theme');
-    iframe.src = `doc.html?theme=${isDarkTheme ? 'dark' : 'light'}`;
-    modal.style.display = 'block';
-}
-
-function closeInstruction() {
-    const modal = document.getElementById('instructionModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function openExample() {
-    const modal = document.getElementById('exampleModal');
-    if (modal) modal.style.display = 'block';
-}
-
-function closeExample() {
-    const modal = document.getElementById('exampleModal');
-    if (modal) modal.style.display = 'none';
-}
-
-function openExampleStick() {
-    const modal = document.getElementById('exampleStickModal');
-    const iframe = document.getElementById('exampleStickFrame');
-    const isDarkTheme = document.body.classList.contains('dark-theme');
-    iframe.src = `exampleStick.html?theme=${isDarkTheme ? 'dark' : 'light'}`;
-    modal.style.display = 'block';
-}
-
-function closeExampleStick() {
-    const modal = document.getElementById('exampleStickModal');
-    if (modal) modal.style.display = 'none';
-}
-
-window.onclick = function(event) {
-    document.querySelectorAll('.modal').forEach(modal => {
-        if (event.target === modal) modal.style.display = "none";
-    });
-};
-
-document.querySelectorAll('.close').forEach(button => {
-    button.addEventListener('click', (e) => {
-        const modal = e.target.closest('.modal');
-        if (modal) modal.style.display = 'none';
-    });
-});
-
-// Переключение типа цвета
-document.querySelectorAll('input[name="bgColorType"]').forEach(radio => {
-    radio.addEventListener('change', toggleBgColorType);
-});
-
-document.querySelectorAll('input[name="textColorType"]').forEach(radio => {
-    radio.addEventListener('change', toggleTextColorType);
-});
 
 function toggleBgColorType() {
     const bgSolid = document.getElementById('bgSolidColorContainer');
@@ -153,144 +135,281 @@ function toggleTextColorType() {
     updatePreview();
 }
 
-function toggleStyle(type) {
-    const button = document.querySelector(`.style-button.${type}`);
-    const checkbox = document.getElementById(`${type}Text`);
-    checkbox.checked = !checkbox.checked;
-    button.classList.toggle('active', checkbox.checked);
-    updatePreview();
+// Модальные окна
+let currentModal = null;
+
+function openModal(modalId) {
+    closeModals();
+    currentModal = document.getElementById(modalId);
+    currentModal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
 }
 
-// Обновление превью
-function updatePreview() {
-    const word = wordInput.value;
-    const fontFamily = fontSelect.value;
-    const bgHeight = parseInt(document.getElementById('bgHeight').value);
-    const rounding = parseInt(document.getElementById('rounding').value);
-    const textSize = parseInt(document.getElementById('textSize').value);
-    const textOffset = parseInt(document.getElementById('textOffset').value);
-    const bgColorType = document.querySelector('input[name="bgColorType"]:checked').value;
-    const textColorType = document.querySelector('input[name="textColorType"]:checked').value;
-    const bgColor = document.getElementById('bgColor').value;
-    const bgColor1 = document.getElementById('bgColor1').value;
-    const bgColor2 = document.getElementById('bgColor2').value;
-    const bgGradientDirection = document.getElementById('bgGradientDirection').value;
-    const textColor = document.getElementById('textColor').value;
-    const textColor1 = document.getElementById('textColor1').value;
-    const textColor2 = document.getElementById('textColor2').value;
-    const textGradientDirection = document.getElementById('textGradientDirection').value;
-    const compactPreview = compactPreviewCheckbox.checked;
-    const bgEnabled = document.getElementById('toggleBackground').checked;
+function closeModals() {
+    if (currentModal) {
+        currentModal.style.display = 'none';
+    }
+    document.body.style.overflow = 'auto';
+    currentModal = null;
+}
 
-    previewContainer.innerHTML = '';
+// Функции открытия
+function openInstruction() {
+    openModal('instructionModal');
+    const iframe = document.getElementById('instructionFrame');
+    iframe.src = `doc.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
+}
+
+function openExample() {
+    openModal('exampleModal');
+}
+
+function openExampleStick() {
+    openModal('exampleStickModal');
+    const iframe = document.getElementById('exampleStickFrame');
+    iframe.src = `exampleStick.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
+}
+
+// Обновленные функции открытия
+function openInstruction() {
+    openModal('instructionModal');
+    const iframe = document.getElementById('instructionFrame');
+    iframe.src = `doc.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
+    
+    // Обработчик сообщений от iframe
+    window.addEventListener('message', function iframeHandler(event) {
+        if (event.data.type === 'iframeHeight' && event.data.id === 'instructionFrame') {
+            const iframe = document.getElementById(event.data.id);
+            iframe.style.height = (event.data.height + 20) + 'px';
+        }
+    });
+}
+
+function openExample() {
+    openModal('exampleModal');
+}
+
+function openExampleStick() {
+    openModal('exampleStickModal');
+    const iframe = document.getElementById('exampleStickFrame');
+    iframe.src = `exampleStick.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
+    
+    // Обработчик сообщений от iframe
+    window.addEventListener('message', function iframeHandler(event) {
+        if (event.data.type === 'iframeHeight' && event.data.id === 'exampleStickFrame') {
+            const iframe = document.getElementById(event.data.id);
+            iframe.style.height = (event.data.height + 20) + 'px';
+        }
+    });
+}
+
+// Основная функция обновления превью
+function updatePreview() {
+    // Получение значений из формы
+    const params = {
+        word: elements.wordInput.value,
+        fontFamily: elements.fontSelect.value,
+        bgHeight: parseInt(document.getElementById('bgHeight').value),
+        rounding: parseInt(document.getElementById('rounding').value),
+        textSize: parseInt(document.getElementById('textSize').value),
+        textOffset: parseInt(document.getElementById('textOffset').value),
+        bgColorType: document.querySelector('input[name="bgColorType"]:checked').value,
+        textColorType: document.querySelector('input[name="textColorType"]:checked').value,
+        bgColor: document.getElementById('bgColor').value,
+        bgColor1: document.getElementById('bgColor1').value,
+        bgColor2: document.getElementById('bgColor2').value,
+        bgGradientDirection: document.getElementById('bgGradientDirection').value,
+        textColor: document.getElementById('textColor').value,
+        textColor1: document.getElementById('textColor1').value,
+        textColor2: document.getElementById('textColor2').value,
+        textGradientDirection: document.getElementById('textGradientDirection').value,
+        compactPreview: elements.compactPreviewCheckbox.checked,
+        bgEnabled: document.getElementById('toggleBackground').checked,
+        bold: elements.boldText.checked,
+        italic: elements.italicText.checked,
+        underline: elements.underlineText.checked,
+        strike: elements.strikeText.checked,
+        uppercase: elements.uppercaseText.checked
+    };
+
+    // Обновление состояния кнопок стилизации
+    elements.styleButtons.forEach(button => {
+        const checkbox = button.querySelector('input[type="checkbox"]');
+        button.classList.toggle('active', checkbox.checked);
+    });
+
+    elements.previewContainer.innerHTML = '';
     images = [];
 
-    if (word) {
-        const letters = word.split('');
+    if (params.word) {
+        const letters = params.word.split('');
+        const totalWidth = letters.length * 100;
 
-        letters.forEach((letter, index) => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 100;
-            canvas.height = 100;
-
-            // Рисование фона
-            if (bgEnabled) {
-                if (bgColorType === "solid") {
-                    ctx.fillStyle = bgColor;
-                } else {
-                    const gradient = ctx.createLinearGradient(0, 0, 0, 100);
-                    gradient.addColorStop(0, bgGradientDirection === "to bottom" ? bgColor1 : bgColor2);
-                    gradient.addColorStop(1, bgGradientDirection === "to bottom" ? bgColor2 : bgColor1);
-                    ctx.fillStyle = gradient;
-                }
-
-                const yOffset = (100 - bgHeight) / 2;
-                roundRect(ctx, 0, yOffset, 100, bgHeight, rounding, index === 0, index === letters.length - 1);
-                ctx.fill();
-            }
-
-            // Рисование текста
-            if (uppercaseText.checked) letter = letter.toUpperCase();
-            ctx.font = `${boldText.checked ? 'bold ' : ''}${italicText.checked ? 'italic ' : ''}${textSize}px ${fontFamily}`;
-            ctx.textBaseline = 'middle';
-            ctx.textAlign = 'center';
-
-            if (textColorType === "solid") {
-                ctx.fillStyle = textColor;
-            } else {
-                const gradient = ctx.createLinearGradient(0, 0, 0, 100);
-                gradient.addColorStop(0, textGradientDirection === "to bottom" ? textColor1 : textColor2);
-                gradient.addColorStop(1, textGradientDirection === "to bottom" ? textColor2 : textColor1);
-                ctx.fillStyle = gradient;
-            }
-
-            const textMetrics = ctx.measureText(letter);
-            const baselineY = (canvas.height / 2) + textOffset;
-            ctx.fillText(letter, canvas.width / 2, baselineY);
-
-            // Подчеркивание и зачеркивание
-            if (underlineText.checked || strikeText.checked) {
-                ctx.strokeStyle = ctx.fillStyle;
-                ctx.beginPath();
-                if (underlineText.checked) {
-                    ctx.moveTo(0, baselineY + (textSize * 0.35));
-                    ctx.lineTo(100, baselineY + (textSize * 0.35));
-                }
-                if (strikeText.checked) {
-                    ctx.moveTo(0, baselineY);
-                    ctx.lineTo(100, baselineY);
-                }
-                ctx.stroke();
-            }
-
-            // Создание финального канваса
-            const finalCanvas = document.createElement('canvas');
-            finalCanvas.width = canvas.width;
-            finalCanvas.height = canvas.height;
-            const finalCtx = finalCanvas.getContext('2d');
-
-            if (bgEnabled) {
-                finalCtx.save();
-                finalCtx.beginPath();
-                const yOffset = (100 - bgHeight) / 2;
-                roundRect(finalCtx, 0, yOffset, 100, bgHeight, rounding, index === 0, index === letters.length - 1);
-                finalCtx.clip();
-            }
-
-            finalCtx.drawImage(canvas, 0, 0);
-            const dataURL = finalCanvas.toDataURL('image/png');
-            const fileName = `${index + 1}_${letter}_emoji.png`;
-            images.push({ fileName, dataURL });
-            previewContainer.appendChild(finalCanvas);
-        });
-
-        // Применение компактного режима
-        if (compactPreview) {
-            previewContainer.style.gap = '0';
-            previewContainer.querySelectorAll('canvas').forEach(canvas => {
-                canvas.style.border = 'none';
-                canvas.style.margin = '0';
-                canvas.style.backgroundImage = 'none';
-            });
-        } else {
-            previewContainer.style.gap = '8px';
-            previewContainer.querySelectorAll('canvas').forEach(canvas => {
-                canvas.style.border = '1px solid #ccc';
-                canvas.style.margin = '8px';
-                canvas.style.backgroundImage = `
-                    linear-gradient(45deg, #ddd 25%, transparent 25%),
-                    linear-gradient(-45deg, #ddd 25%, transparent 25%),
-                    linear-gradient(45deg, transparent 75%, #ddd 75%),
-                    linear-gradient(-45deg, transparent 75%, #ddd 75%)
-                `;
-            });
-        }
-
-        downloadAllButton.style.display = 'block';
+        // Создание и заполнение основного холста
+        const fullCanvas = createFullCanvas(totalWidth, letters, params);
+        
+        // Разделение на отдельные изображения
+        createIndividualCanvases(letters, fullCanvas, params);
+        
+        // Настройка отображения превью
+        setupPreviewDisplay(params.compactPreview);
+        
+        elements.downloadAllButton.style.display = 'block';
     } else {
-        downloadAllButton.style.display = 'none';
+        elements.downloadAllButton.style.display = 'none';
     }
+}
+
+// Вспомогательные функции для updatePreview
+function createFullCanvas(totalWidth, letters, params) {
+    const canvas = document.createElement('canvas');
+    canvas.width = totalWidth;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+
+    // Сначала рисуем фон (подложку)
+    if (params.bgEnabled) {
+        ctx.fillStyle = getBackgroundStyle(totalWidth, params);
+        const yOffset = (100 - params.bgHeight) / 2;
+        roundRect(ctx, 0, yOffset, totalWidth, params.bgHeight, params.rounding, true, true);
+        ctx.fill();
+        
+        // Сохраняем путь подложки как маску
+        ctx.save();
+        ctx.beginPath();
+        roundRect(ctx, 0, yOffset, totalWidth, params.bgHeight, params.rounding, true, true);
+        ctx.clip();
+    }
+
+    // Затем рисуем текст (он будет обрезан по маске подложки)
+    letters.forEach((letter, index) => {
+        const x = index * 100 + 50;
+        const processedLetter = params.uppercase ? letter.toUpperCase() : letter;
+        
+        ctx.font = `${params.bold ? 'bold ' : ''}${params.italic ? 'italic ' : ''}${params.textSize}px ${params.fontFamily}`;
+        ctx.textBaseline = 'middle';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = getTextStyle(totalWidth, x, params);
+        
+        const baselineY = 50 + params.textOffset;
+        ctx.fillText(processedLetter, x, baselineY);
+
+        // Подчеркивание и зачеркивание
+        if (params.underline || params.strike) {
+            ctx.strokeStyle = ctx.fillStyle;
+            ctx.beginPath();
+            if (params.underline) {
+                ctx.moveTo(x - 50, baselineY + (params.textSize * 0.35));
+                ctx.lineTo(x + 50, baselineY + (params.textSize * 0.35));
+            }
+            if (params.strike) {
+                ctx.moveTo(x - 50, baselineY);
+                ctx.lineTo(x + 50, baselineY);
+            }
+            ctx.stroke();
+        }
+    });
+
+    // Восстанавливаем контекст (убираем маску)
+    if (params.bgEnabled) {
+        ctx.restore();
+    }
+
+    return canvas;
+}
+
+function getBackgroundStyle(totalWidth, params) {
+    if (params.bgColorType === "solid") return params.bgColor;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = totalWidth;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+    
+    let gradient;
+    if (params.bgGradientDirection.includes('bottom') || params.bgGradientDirection.includes('top')) {
+        gradient = ctx.createLinearGradient(0, 0, 0, 100);
+    } else {
+        gradient = ctx.createLinearGradient(0, 0, totalWidth, 0);
+    }
+    
+    const [color1, color2] = getGradientColors(params.bgGradientDirection, params.bgColor1, params.bgColor2);
+    gradient.addColorStop(0, color1);
+    gradient.addColorStop(1, color2);
+    
+    return gradient;
+}
+
+function getTextStyle(totalWidth, x, params) {
+    if (params.textColorType === "solid") return params.textColor;
+    
+    const canvas = document.createElement('canvas');
+    canvas.width = totalWidth;
+    canvas.height = 100;
+    const ctx = canvas.getContext('2d');
+    
+    let gradient;
+    if (params.textGradientDirection.includes('bottom') || params.textGradientDirection.includes('top')) {
+        gradient = ctx.createLinearGradient(x - 50, 0, x - 50, 100);
+    } else {
+        gradient = ctx.createLinearGradient(0, 0, totalWidth, 0);
+    }
+    
+    const [color1, color2] = getGradientColors(params.textGradientDirection, params.textColor1, params.textColor2);
+    gradient.addColorStop(0, color1);
+    gradient.addColorStop(1, color2);
+    
+    return gradient;
+}
+
+function getGradientColors(direction, color1, color2) {
+    switch(direction) {
+        case 'to bottom':
+        case 'to right':
+            return [color1, color2];
+        case 'to top':
+        case 'to left':
+            return [color2, color1];
+        default:
+            return [color1, color2];
+    }
+}
+
+function createIndividualCanvases(letters, fullCanvas, params) {
+    letters.forEach((letter, index) => {
+        const canvas = document.createElement('canvas');
+        canvas.width = 100;
+        canvas.height = 100;
+        const ctx = canvas.getContext('2d');
+        
+        ctx.drawImage(fullCanvas, index * 100, 0, 100, 100, 0, 0, 100, 100);
+        
+        const dataURL = canvas.toDataURL('image/png');
+        const fileName = `${index + 1}_${letter}_emoji.png`;
+        images.push({ fileName, dataURL });
+        elements.previewContainer.appendChild(canvas);
+    });
+}
+
+function setupPreviewDisplay(compactPreview) {
+    elements.previewContainer.style.gap = compactPreview ? '0' : '8px';
+    
+    elements.previewContainer.querySelectorAll('canvas').forEach(canvas => {
+        if (compactPreview) {
+            canvas.style.border = 'none';
+            canvas.style.margin = '0';
+            canvas.style.backgroundImage = 'none';
+        } else {
+            canvas.style.border = '1px solid #ccc';
+            canvas.style.margin = '8px';
+            canvas.style.backgroundImage = `
+                linear-gradient(45deg, #ddd 25%, transparent 25%),
+                linear-gradient(-45deg, #ddd 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, #ddd 75%),
+                linear-gradient(-45deg, transparent 75%, #ddd 75%)
+            `;
+        }
+    });
 }
 
 // Функция для рисования прямоугольника с закругленными углами
@@ -310,21 +429,16 @@ function roundRect(ctx, x, y, width, height, radius, roundLeft, roundRight) {
 }
 
 // Скачивание архива
-downloadAllButton.addEventListener('click', () => {
+function downloadAllImages() {
     const zip = new JSZip();
-    const folder = zip.folder("emojis_" + wordInput.value);
+    const folder = zip.folder("emojis_" + elements.wordInput.value);
+    
     images.forEach((img) => {
         const base64Data = img.dataURL.split(',')[1];
         folder.file(img.fileName, base64Data, { base64: true });
     });
+    
     zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, "emojis_" + wordInput.value + ".zip");
+        saveAs(content, "emojis_" + elements.wordInput.value + ".zip");
     });
-});
-
-// Инициализация
-document.addEventListener('DOMContentLoaded', () => {
-    updatePreview();
-    toggleBgColorType();
-    toggleTextColorType();
-});
+}

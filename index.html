@@ -15,7 +15,10 @@
 
     <!-- Шапка с заголовком и кнопками управления -->
     <header>
-        <h1 class="title">Генератор эмодзи</h1>
+        <div class="title-wrapper">
+            <h1 class="title">Генератор эмодзи</h1>
+            <span class="version">v2.3</span>
+        </div>
 
         <!-- Бургер-меню -->
         <div class="burger-menu">
@@ -144,6 +147,8 @@
                         <select id="bgGradientDirection" name="bgGradientDirection">
                             <option value="to bottom">Сверху вниз</option>
                             <option value="to top">Снизу вверх</option>
+                            <option value="to right">Слева направо</option>
+                            <option value="to left">Справа налево</option>
                         </select>
                     </div>
                 </div>
@@ -167,6 +172,8 @@
                         <select id="textGradientDirection" name="textGradientDirection">
                             <option value="to bottom">Сверху вниз</option>
                             <option value="to top">Снизу вверх</option>
+                            <option value="to right">Слева направо</option>
+                            <option value="to left">Справа налево</option>
                         </select>
                     </div>
                 </div>
@@ -210,24 +217,33 @@
     </div>
 
     <!-- Модальные окна для инструкции и примера -->
+    <!-- Окно инструкции -->
     <div id="instructionModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <iframe id="instructionFrame" src="doc.html" style="width: 100%; height: 80vh; border: none;"></iframe>
+            <button class="close">&times;</button>
+            <div class="modal-body">
+                <iframe id="instructionFrame" class="modal-iframe" src="doc.html"></iframe>
+            </div>
         </div>
     </div>
 
+    <!-- Окно примера -->
     <div id="exampleModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <img src="example.png" alt="Пример" style="width: 100%;">
+            <button class="close">&times;</button>
+            <div class="modal-body">
+                <img src="example.png" class="modal-image" alt="Пример">
+            </div>
         </div>
     </div>
 
+    <!-- Окно стикеров -->
     <div id="exampleStickModal" class="modal">
         <div class="modal-content">
-            <span class="close">&times;</span>
-            <iframe id="exampleStickFrame" src="exampleStick.html" style="width:100%;height:80vh; border: none;"></iframe>
+            <button class="close">&times;</button>
+            <div class="modal-body">
+                <iframe id="exampleStickFrame" class="modal-iframe" src="exampleStick.html"></iframe>
+            </div>
         </div>
     </div>
 

@@ -18,6 +18,9 @@
             --scrollbar-track: #f1f1f1;
             --media-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --link-color: #0077cc;
+            --preview-size: 75px;
+            --transition-duration: 0.3s;
+            --viewer-border: 0.5px solid rgba(0, 0, 0, 0.2); /* Рамка для светлой темы */
         }
 
         body.dark-theme {
@@ -29,6 +32,7 @@
             --scrollbar-track: #444;
             --media-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
             --link-color: #4da6ff;
+            --viewer-border: 0.5px solid rgba(255, 255, 255, 0.2); /* Рамка для темной темы */
         }
 
         body {
@@ -41,11 +45,12 @@
             overflow-x: hidden;
         }
 
-        /* Контейнер для контента с фиксированной высотой */
+        /* Контейнер для контента */
         .content-container {
             max-height: calc(100vh - 40px);
             overflow-y: auto;
             padding-right: 15px;
+            transition: filter var(--transition-duration) ease;
         }
 
         /* Стилизация скроллбара */
@@ -88,7 +93,7 @@
             border-bottom-color: rgba(255, 255, 255, 0.1);
         }
 
-        /* Специфические стили для примеров */
+        /* Стили для категорий и контейнера медиа */
         .category {
             margin-top: 30px;
         }
@@ -101,11 +106,22 @@
             margin: 15px 0;
         }
 
+        /* Стили для элементов медиа */
+        .media-item {
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .media-item:hover {
+            transform: scale(1.05);
+        }
+
         .media-container img, 
         .media-container video, 
         .lottie-container {
-            width: 150px;
-            height: 150px;
+            width: var(--preview-size);
+            height: var(--preview-size);
             border-radius: 10px;
             box-shadow: var(--media-shadow);
             background: 
@@ -128,6 +144,69 @@
             justify-content: center;
         }
 
+        /* Стили для увеличенного просмотра */
+        .media-viewer {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+/*            background-color: rgba(0, 0, 0, 0.7);*/
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--transition-duration) ease, visibility var(--transition-duration) ease;
+        }
+
+        .media-viewer.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .media-viewer-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+            transition: transform var(--transition-duration) ease;
+            transform: scale(0.8);
+        }
+
+        .media-viewer.active .media-viewer-content {
+            transform: scale(1);
+        }
+
+        .media-viewer img,
+        .media-viewer video,
+        .media-viewer .lottie-container {
+            width: auto;
+            height: auto;
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: var(--viewer-border); /* Добавляем тонкую рамку */
+        }
+
+        .media-viewer .lottie-container {
+            width: 300px;
+            height: 300px;
+        }
+
+        .close-viewer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1001;
+        }
+
+        /* Остальные стили */
         a {
             color: var(--link-color);
             text-decoration: none;
@@ -151,8 +230,14 @@
         <div id="content"></div>
     </div>
 
+    <!-- Контейнер для увеличенного просмотра -->
+    <div class="media-viewer" id="mediaViewer">
+        <span class="close-viewer">&times;</span>
+        <div class="media-viewer-content" id="mediaViewerContent"></div>
+    </div>
+
     <script>
-        // Оригинальный скрипт для контента
+        // Данные медиа
         const mediaData = {
             "stick_6": ["exmp1.json", "exmp2.json", "exmp3.json", "exmp4.json", "exmp5.json"],
             "stick_5": ["mov1.webm", "mov2.webm", "mov3.webm"],
@@ -172,7 +257,11 @@
         };
 
         const contentDiv = document.getElementById("content");
+        const mediaViewer = document.getElementById("mediaViewer");
+        const mediaViewerContent = document.getElementById("mediaViewerContent");
+        const closeViewer = document.querySelector(".close-viewer");
 
+        // Создаем элементы для каждого медиа
         Object.entries(mediaData).forEach(([category, files]) => {
             const section = document.createElement("div");
             section.classList.add("category");
@@ -185,27 +274,29 @@
             mediaContainer.classList.add("media-container");
 
             files.forEach(file => {
+                const mediaItem = document.createElement("div");
+                mediaItem.classList.add("media-item");
+
+                let mediaElement;
                 if (file.endsWith(".webm")) {
-                    const video = document.createElement("video");
-                    video.src = `src/${category}/${file}`;
-                    video.autoplay = true;
-                    video.loop = true;
-                    video.muted = true;
-                    mediaContainer.appendChild(video);
+                    mediaElement = document.createElement("video");
+                    mediaElement.src = `src/${category}/${file}`;
+                    mediaElement.autoplay = true;
+                    mediaElement.loop = true;
+                    mediaElement.muted = true;
                 } else if (file.endsWith(".png") || file.endsWith(".webp")) {
-                    const img = document.createElement("img");
-                    img.src = `src/${category}/${file}`;
-                    mediaContainer.appendChild(img);
+                    mediaElement = document.createElement("img");
+                    mediaElement.src = `src/${category}/${file}`;
+                    mediaElement.loading = "lazy";
                 } else if (file.endsWith(".json")) {
-                    const lottieContainer = document.createElement("div");
-                    lottieContainer.classList.add("lottie-container");
-                    mediaContainer.appendChild(lottieContainer);
+                    mediaElement = document.createElement("div");
+                    mediaElement.classList.add("lottie-container");
                     
                     fetch(`src/${category}/${file}`)
                         .then(response => response.json())
                         .then(animationData => {
                             lottie.loadAnimation({
-                                container: lottieContainer,
+                                container: mediaElement,
                                 renderer: 'svg',
                                 loop: true,
                                 autoplay: true,
@@ -213,10 +304,74 @@
                             });
                         });
                 }
+
+                mediaItem.appendChild(mediaElement);
+                mediaItem.addEventListener('click', () => openMediaViewer(mediaElement, category, file));
+                mediaContainer.appendChild(mediaItem);
             });
 
             section.appendChild(mediaContainer);
             contentDiv.appendChild(section);
+        });
+
+        // Функция открытия просмотра
+        function openMediaViewer(element, category, file) {
+            // Очищаем предыдущий контент
+            mediaViewerContent.innerHTML = '';
+            
+            // Создаем новый элемент для просмотра
+            let viewerElement;
+            if (file.endsWith(".webm")) {
+                viewerElement = document.createElement("video");
+                viewerElement.src = `src/${category}/${file}`;
+                viewerElement.autoplay = true;
+                viewerElement.loop = true;
+                viewerElement.controls = true;
+            } else if (file.endsWith(".png") || file.endsWith(".webp")) {
+                viewerElement = document.createElement("img");
+                viewerElement.src = `src/${category}/${file}`;
+            } else if (file.endsWith(".json")) {
+                viewerElement = document.createElement("div");
+                viewerElement.classList.add("lottie-container");
+                
+                fetch(`src/${category}/${file}`)
+                    .then(response => response.json())
+                    .then(animationData => {
+                        lottie.loadAnimation({
+                            container: viewerElement,
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            animationData: animationData
+                        });
+                    });
+            }
+
+            mediaViewerContent.appendChild(viewerElement);
+            mediaViewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Закрытие просмотра
+        function closeMediaViewer() {
+            mediaViewer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            // Останавливаем видео при закрытии
+            const video = mediaViewerContent.querySelector('video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+
+        // Обработчики событий
+        closeViewer.addEventListener('click', closeMediaViewer);
+        mediaViewer.addEventListener('click', (e) => {
+            // Закрываем только при клике на оверлей (не на контент)
+            if (e.target === mediaViewer) {
+                closeMediaViewer();
+            }
         });
 
         // Получаем параметр темы из URL
@@ -226,6 +381,7 @@
         // Применяем тему
         document.body.classList.toggle('dark-theme', theme === 'dark');
 
+        // Функции для работы с iframe
         window.addEventListener('load', sendHeight);
         new ResizeObserver(sendHeight).observe(document.body);
 

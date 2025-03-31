@@ -649,3 +649,44 @@ body.dark-theme .modal-content iframe {
     border-radius: 10px;
 }
 
+/* Стили для блока обводки текста */
+#textStrokeControls {
+    margin-top: 10px;
+    padding: 10px;
+    background: rgba(0,0,0,0.05);
+    border-radius: var(--border-radius-ui);
+}
+
+#textStrokeControls .row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#textStrokeColor {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+#textStrokeWidth {
+    width: 50px;
+    padding: 5px;
+    border: 1px solid var(--input-border);
+    border-radius: 4px;
+}
+
+#textStrokeWidthRange {
+    width: 30px;
+    flex: 1;
+}
+
+.word-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 20px;
+    margin-bottom: 20px; /* Отступ между словами */
+}

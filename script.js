@@ -13,7 +13,11 @@ const elements = {
     compactPreviewCheckbox: document.getElementById('compactPreview'),
     styleButtons: document.querySelectorAll('.style-button'),
     themeSwitcher: document.querySelector('.theme-switcher'),
-    form: document.getElementById('emojiForm')
+    form: document.getElementById('emojiForm'),
+    textStrokeToggle: document.getElementById('textStrokeToggle'),
+    textStrokeColor: document.getElementById('textStrokeColor'),
+    textStrokeWidth: document.getElementById('textStrokeWidth'),
+    textStrokeWidthRange: document.getElementById('textStrokeWidthRange')
 };
 
 let images = []; // Массив для хранения изображений
@@ -68,6 +72,32 @@ function initEventListeners() {
     document.querySelectorAll('input[name="textColorType"]').forEach(radio => {
         radio.addEventListener('change', toggleTextColorType);
     });
+
+    // Связь ползунка и числового ввода для обводки
+    elements.textStrokeWidth.addEventListener('input', function() {
+        elements.textStrokeWidthRange.value = this.value;
+        updatePreview();
+    });
+    
+    elements.textStrokeWidthRange.addEventListener('input', function() {
+        elements.textStrokeWidth.value = this.value;
+        updatePreview();
+    });
+    
+    elements.textStrokeToggle.addEventListener('change', function() {
+        document.getElementById('textStrokeControls').style.display = 
+            this.checked ? 'block' : 'none';
+        updatePreview();
+    });
+
+    // Инициализация видимости при загрузке
+    document.getElementById('textStrokeControls').style.display = 
+        elements.textStrokeToggle.checked ? 'block' : 'none';
+        
+    // Обработчики для обводки
+    elements.textStrokeToggle.addEventListener('change', updatePreview);
+    elements.textStrokeColor.addEventListener('input', updatePreview);
+    elements.textStrokeWidth.addEventListener('input', updatePreview);
 
     // Кнопки управления
     document.querySelector('.burger-menu').addEventListener('click', toggleMenu);
@@ -158,23 +188,6 @@ function openInstruction() {
     openModal('instructionModal');
     const iframe = document.getElementById('instructionFrame');
     iframe.src = `doc.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
-}
-
-function openExample() {
-    openModal('exampleModal');
-}
-
-function openExampleStick() {
-    openModal('exampleStickModal');
-    const iframe = document.getElementById('exampleStickFrame');
-    iframe.src = `exampleStick.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
-}
-
-// Обновленные функции открытия
-function openInstruction() {
-    openModal('instructionModal');
-    const iframe = document.getElementById('instructionFrame');
-    iframe.src = `doc.html?theme=${document.body.classList.contains('dark-theme') ? 'dark' : 'light'}`;
     
     // Обработчик сообщений от iframe
     window.addEventListener('message', function iframeHandler(event) {
@@ -229,7 +242,10 @@ function updatePreview() {
         italic: elements.italicText.checked,
         underline: elements.underlineText.checked,
         strike: elements.strikeText.checked,
-        uppercase: elements.uppercaseText.checked
+        uppercase: elements.uppercaseText.checked,
+        textStrokeEnabled: elements.textStrokeToggle.checked,
+        textStrokeColor: elements.textStrokeColor.value,
+        textStrokeWidth: parseInt(elements.textStrokeWidth.value)
     };
 
     // Обновление состояния кнопок стилизации
@@ -242,14 +258,43 @@ function updatePreview() {
     images = [];
 
     if (params.word) {
-        const letters = params.word.split('');
-        const totalWidth = letters.length * 100;
-
-        // Создание и заполнение основного холста
-        const fullCanvas = createFullCanvas(totalWidth, letters, params);
+        // Разделяем текст по | и удаляем пустые строки
+        const words = params.word.split('|').map(w => w.trim()).filter(w => w.length > 0);
         
-        // Разделение на отдельные изображения
-        createIndividualCanvases(letters, fullCanvas, params);
+        // Создаем контейнер для превью
+        const previewWrapper = document.createElement('div');
+        previewWrapper.className = 'preview-wrapper';
+        elements.previewContainer.appendChild(previewWrapper);
+        
+        // Обрабатываем каждое слово отдельно
+        words.forEach((word, wordIndex) => {
+            // Создаем строку для слова
+            const wordRow = document.createElement('div');
+            wordRow.className = 'word-row';
+            previewWrapper.appendChild(wordRow);
+            
+            const letters = word.split('');
+            const totalWidth = letters.length * 100;
+            
+            // Создаем холст для слова (всегда закругляем первый и последний символ)
+            const fullCanvas = createFullCanvas(totalWidth, letters, params, true, true);
+            
+            // Разделяем на отдельные изображения с новыми именами файлов
+            letters.forEach((letter, letterIndex) => {
+                const canvas = document.createElement('canvas');
+                canvas.width = 100;
+                canvas.height = 100;
+                const ctx = canvas.getContext('2d');
+                
+                ctx.drawImage(fullCanvas, letterIndex * 100, 0, 100, 100, 0, 0, 100, 100);
+                
+                // Новый формат: {номер слова}W_{слово}_{номер буквы}L_{буква}
+                const fileName = `${wordIndex + 1}W_${word}_${letterIndex + 1}L_${letter}.png`;
+                const dataURL = canvas.toDataURL('image/png');
+                images.push({ fileName, dataURL });
+                wordRow.appendChild(canvas);
+            });
+        });
         
         // Настройка отображения превью
         setupPreviewDisplay(params.compactPreview);
@@ -259,9 +304,8 @@ function updatePreview() {
         elements.downloadAllButton.style.display = 'none';
     }
 }
-
 // Вспомогательные функции для updatePreview
-function createFullCanvas(totalWidth, letters, params) {
+function createFullCanvas(totalWidth, letters, params, isFirstWord, isLastWord) {
     const canvas = document.createElement('canvas');
     canvas.width = totalWidth;
     canvas.height = 100;
@@ -271,6 +315,8 @@ function createFullCanvas(totalWidth, letters, params) {
     if (params.bgEnabled) {
         ctx.fillStyle = getBackgroundStyle(totalWidth, params);
         const yOffset = (100 - params.bgHeight) / 2;
+        
+        // Всегда закругляем первый и последний символ слова
         roundRect(ctx, 0, yOffset, totalWidth, params.bgHeight, params.rounding, true, true);
         ctx.fill();
         
@@ -289,22 +335,29 @@ function createFullCanvas(totalWidth, letters, params) {
         ctx.font = `${params.bold ? 'bold ' : ''}${params.italic ? 'italic ' : ''}${params.textSize}px ${params.fontFamily}`;
         ctx.textBaseline = 'middle';
         ctx.textAlign = 'center';
-        ctx.fillStyle = getTextStyle(totalWidth, x, params);
         
-        const baselineY = 50 + params.textOffset;
-        ctx.fillText(processedLetter, x, baselineY);
+        // Если обводка включена - рисуем обводку
+        if (params.textStrokeEnabled) {
+            ctx.strokeStyle = params.textStrokeColor;
+            ctx.lineWidth = params.textStrokeWidth;
+            ctx.strokeText(processedLetter, x, 50 + params.textOffset);
+        }
+
+        // Рисуем основной текст
+        ctx.fillStyle = getTextStyle(totalWidth, x, params);
+        ctx.fillText(processedLetter, x, 50 + params.textOffset);
 
         // Подчеркивание и зачеркивание
         if (params.underline || params.strike) {
             ctx.strokeStyle = ctx.fillStyle;
             ctx.beginPath();
             if (params.underline) {
-                ctx.moveTo(x - 50, baselineY + (params.textSize * 0.35));
-                ctx.lineTo(x + 50, baselineY + (params.textSize * 0.35));
+                ctx.moveTo(x - 50, 50 + params.textOffset + (params.textSize * 0.35));
+                ctx.lineTo(x + 50, 50 + params.textOffset + (params.textSize * 0.35));
             }
             if (params.strike) {
-                ctx.moveTo(x - 50, baselineY);
-                ctx.lineTo(x + 50, baselineY);
+                ctx.moveTo(x - 50, 50 + params.textOffset);
+                ctx.lineTo(x + 50, 50 + params.textOffset);
             }
             ctx.stroke();
         }
@@ -375,40 +428,52 @@ function getGradientColors(direction, color1, color2) {
     }
 }
 
-function createIndividualCanvases(letters, fullCanvas, params) {
-    letters.forEach((letter, index) => {
+function createIndividualCanvases(letters, fullCanvas, params, word, wordIndex) {
+    letters.forEach((letter, letterIndex) => {
         const canvas = document.createElement('canvas');
         canvas.width = 100;
         canvas.height = 100;
         const ctx = canvas.getContext('2d');
         
-        ctx.drawImage(fullCanvas, index * 100, 0, 100, 100, 0, 0, 100, 100);
+        ctx.drawImage(fullCanvas, letterIndex * 100, 0, 100, 100, 0, 0, 100, 100);
         
+        // Новый формат имени файла: {номер слова}W_{слово}_{номер буквы}L_{буква}
+        const fileName = `${wordIndex + 1}W_${word}_${letterIndex + 1}L_${letter}.png`;
         const dataURL = canvas.toDataURL('image/png');
-        const fileName = `${index + 1}_${letter}_emoji.png`;
         images.push({ fileName, dataURL });
         elements.previewContainer.appendChild(canvas);
     });
 }
 
 function setupPreviewDisplay(compactPreview) {
-    elements.previewContainer.style.gap = compactPreview ? '0' : '8px';
+    const previewWrapper = document.querySelector('.preview-wrapper');
+    if (!previewWrapper) return;
     
-    elements.previewContainer.querySelectorAll('canvas').forEach(canvas => {
-        if (compactPreview) {
-            canvas.style.border = 'none';
-            canvas.style.margin = '0';
-            canvas.style.backgroundImage = 'none';
-        } else {
-            canvas.style.border = '1px solid #ccc';
-            canvas.style.margin = '8px';
-            canvas.style.backgroundImage = `
-                linear-gradient(45deg, #ddd 25%, transparent 25%),
-                linear-gradient(-45deg, #ddd 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, #ddd 75%),
-                linear-gradient(-45deg, transparent 75%, #ddd 75%)
-            `;
-        }
+    previewWrapper.style.gap = compactPreview ? '0' : '8px';
+    
+    // Стили для строк с словами
+    document.querySelectorAll('.word-row').forEach(row => {
+        row.style.display = 'flex';
+        row.style.flexWrap = 'wrap';
+        row.style.marginBottom = compactPreview ? '0' : '20px'; // Отступ между словами
+        
+        // Стили для отдельных канвасов
+        row.querySelectorAll('canvas').forEach(canvas => {
+            if (compactPreview) {
+                canvas.style.border = 'none';
+                canvas.style.margin = '0';
+                canvas.style.backgroundImage = 'none';
+            } else {
+                canvas.style.border = '1px solid #ccc';
+                canvas.style.margin = '0 8px 8px 0';
+                canvas.style.backgroundImage = `
+                    linear-gradient(45deg, #ddd 25%, transparent 25%),
+                    linear-gradient(-45deg, #ddd 25%, transparent 25%),
+                    linear-gradient(45deg, transparent 75%, #ddd 75%),
+                    linear-gradient(-45deg, transparent 75%, #ddd 75%)
+                `;
+            }
+        });
     });
 }
 
@@ -431,7 +496,7 @@ function roundRect(ctx, x, y, width, height, radius, roundLeft, roundRight) {
 // Скачивание архива
 function downloadAllImages() {
     const zip = new JSZip();
-    const folder = zip.folder("emojis_" + elements.wordInput.value);
+    const folder = zip.folder("emojis_" + elements.wordInput.value.replace(/\|/g, '_'));
     
     images.forEach((img) => {
         const base64Data = img.dataURL.split(',')[1];
@@ -439,6 +504,6 @@ function downloadAllImages() {
     });
     
     zip.generateAsync({ type: "blob" }).then((content) => {
-        saveAs(content, "emojis_" + elements.wordInput.value + ".zip");
+        saveAs(content, "emojis_" + elements.wordInput.value.replace(/\|/g, '_') + ".zip");
     });
 }

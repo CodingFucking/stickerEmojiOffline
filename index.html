@@ -1,50 +1,45 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+    <!-- Мета-информация и базовые настройки -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор эмодзи</title>
-    <!-- Подключение favicon с эмодзи самолётика -->
+    <!-- Favicon (эмодзи самолёта) -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
-    <!-- Подключение шрифтов -->
+    <!-- Подключение шрифтов Google -->
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Source+Code+Pro&family=IBM+Plex+Mono&family=Ubuntu+Mono&family=PT+Mono&family=Fira+Code&family=Anonymous+Pro&family=Courier+Prime&family=Inconsolata&family=JetBrains+Mono&family=Montserrat&family=Open+Sans&family=Roboto&family=Lato&family=Raleway&family=PT+Sans&family=Merriweather&family=Playfair+Display&family=Lora&family=Noto+Sans&family=Noto+Serif&family=Rubik&family=Inter&family=Manrope&family=Jost&family=Oswald&family=Comfortaa&family=El+Messiri&family=Cormorant+Infant&family=Yanone+Kaffeesatz&family=Tinos&family=Source+Sans+Pro&family=Ubuntu&family=Fira+Sans&family=Exo+2&family=Nunito&family=Poppins&family=Quicksand&display=swap" rel="stylesheet">
+    <!-- Подключение CSS-файлов -->
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="fonts.css">
 </head>
-<body>
 
-    <!-- Шапка с заголовком и кнопками управления -->
+<body>
+    <!-- ========== HEADER (ШАПКА) ========== -->
     <header>
         <div class="title-wrapper">
             <h1 class="title">Генератор эмодзи</h1>
-            <span class="version">v2.3</span>
+            <span class="version">v2.4</span>
         </div>
-
-        <!-- Бургер-меню -->
-        <div class="burger-menu">
-            <div class="bar"></div>
-        </div>
-
-        <!-- Контейнер для кнопок управления -->
+        <div class="burger-menu"><div class="bar"></div></div>
         <div class="controls-container" id="controlsContainer">
             <div class="controls">
-                <button class="example-stick-button" aria-label="Индивидуальные стикеры">📌 Индивидуальные стикеры</button>
-                <button class="instruction-button" aria-label="Открыть инструкцию">Инструкция</button>
-                <button class="example-button" aria-label="Показать пример">Итог</button>
-                <button class="theme-switcher" aria-label="Сменить тему">Сменить тему</button>
-                <button class="compact-preview-button" aria-label="Без расстояния и рамок">Без расстояния и рамок<input type="checkbox" id="compactPreview" hidden></button>
+                <button class="example-stick-button">📌 Индивидуальные стикеры</button>
+                <button class="instruction-button">Инструкция</button>
+                <button class="example-button">Итог</button>
+                <button class="theme-switcher">Сменить тему</button>
+                <button class="compact-preview-button">Без расстояния и рамок<input type="checkbox" id="compactPreview" hidden></button>
             </div>
         </div>
     </header>
 
-    <!-- Основная форма для ввода данных -->
+    <!-- ========== MAIN FORM (ОСНОВНАЯ ФОРМА) ========== -->
     <div class="form-container">
         <form id="emojiForm">
-            <!-- Группа для ввода текста и выбора шрифта -->
+            <!-- Блок ввода текста и выбора шрифта -->
             <div class="form-group inline-group">
-                <input type="text" id="word" placeholder="Введите слово" required>
+                <input type="text" id="word" placeholder="Текст1|Текст2" required>
                 <select id="font">
-                    <!-- Моноширинные шрифты -->
                     <optgroup label="Моноширинные">
                         <option value="'Ubuntu Mono', monospace" selected>Ubuntu Mono</option>
                         <option value="'Roboto Mono', monospace">Roboto Mono</option>
@@ -58,7 +53,6 @@
                         <option value="'JetBrains Mono', monospace">JetBrains Mono</option>
                     </optgroup>
 
-                    <!-- Шрифты, поддерживающие и кириллицу, и латиницу -->
                     <optgroup label="Кириллица и латиница">
                         <option value="'El Messiri', serif">El Messiri</option>
                         <option value="'Cormorant Infant', serif">Cormorant Infant</option>
@@ -81,7 +75,6 @@
                         <option value="'Poppins', sans-serif">Poppins</option>
                     </optgroup>
 
-                    <!-- Дополнительные локальные шрифты -->
                     <optgroup label="Дополнительные">
                         <option value="'Belcanto Modern', serif">Belcanto Modern</option>
                         <option value="'Callysto', sans-serif">Callysto</option>
@@ -95,52 +88,29 @@
                         <option value="'Serpantin', serif">Serpantin</option>
                     </optgroup>
                 </select>
-
-                <!-- Кнопки для стилизации текста -->
+                
                 <div class="style-buttons">
-                    <label class="style-button bold">
-                        <span>T</span>
-                        <input type="checkbox" hidden id="boldText">
-                    </label>
-                    <label class="style-button italic">
-                        <span>T</span>
-                        <input type="checkbox" hidden id="italicText">
-                    </label>
-                    <label class="style-button underline">
-                        <span>T</span>
-                        <input type="checkbox" hidden id="underlineText">
-                    </label>
-                    <label class="style-button strike">
-                        <span>T</span>
-                        <input type="checkbox" hidden id="strikeText">
-                    </label>
-                    <label class="style-button uppercase">
-                        <span>t</span>
-                        <input type="checkbox" hidden id="uppercaseText">
-                    </label>
+                    <label class="style-button bold"><span>T</span><input type="checkbox" hidden id="boldText"></label>
+                    <label class="style-button italic"><span>T</span><input type="checkbox" hidden id="italicText"></label>
+                    <label class="style-button underline"><span>T</span><input type="checkbox" hidden id="underlineText"></label>
+                    <label class="style-button strike"><span>T</span><input type="checkbox" hidden id="strikeText"></label>
+                    <label class="style-button uppercase"><span>t</span><input type="checkbox" hidden id="uppercaseText"></label>
                 </div>
             </div>
 
-            <!-- Выбор цвета фона и текста -->
+            <!-- ========== COLOR PICKERS (ВЫБОР ЦВЕТОВ) ========== -->
             <div class="color-picker-wrapper">
+                <!-- Выбор цвета фона -->
                 <div class="color-picker-container">
                     <div class="row">
                         <label>Фон</label>
-                        <label class="toggle-bg">
-                            <input type="checkbox" id="toggleBackground" checked>
-                        </label>
+                        <label class="toggle-bg"><input type="checkbox" id="toggleBackground" checked></label>
                     </div>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="bgColorType" value="solid" checked> Цвет
-                        </label>
-                        <label>
-                            <input type="radio" name="bgColorType" value="gradient"> Градиент
-                        </label>
+                        <label><input type="radio" name="bgColorType" value="solid" checked> Цвет</label>
+                        <label><input type="radio" name="bgColorType" value="gradient"> Градиент</label>
                     </div>
-                    <div id="bgSolidColorContainer">
-                        <input type="color" id="bgColor" name="bgColor" value="#ffffff">
-                    </div>
+                    <div id="bgSolidColorContainer"><input type="color" id="bgColor" name="bgColor" value="#ffffff"></div>
                     <div id="bgGradientColorContainer" style="display: none;">
                         <input type="color" id="bgColor1" name="bgColor1" value="#ffffff">
                         <input type="color" id="bgColor2" name="bgColor2" value="#ffffff">
@@ -153,19 +123,14 @@
                     </div>
                 </div>
                 
+                <!-- Выбор цвета текста -->
                 <div class="color-picker-container">
                     <label>Текст</label>
                     <div class="row">
-                        <label>
-                            <input type="radio" name="textColorType" value="solid" checked> Цвет
-                        </label>
-                        <label>
-                            <input type="radio" name="textColorType" value="gradient"> Градиент
-                        </label>
+                        <label><input type="radio" name="textColorType" value="solid" checked> Цвет</label>
+                        <label><input type="radio" name="textColorType" value="gradient"> Градиент</label>
                     </div>
-                    <div id="textSolidColorContainer">
-                        <input type="color" id="textColor" name="textColor" value="#000000">
-                    </div>
+                    <div id="textSolidColorContainer"><input type="color" id="textColor" name="textColor" value="#000000"></div>
                     <div id="textGradientColorContainer" style="display: none;">
                         <input type="color" id="textColor1" name="textColor1" value="#000000">
                         <input type="color" id="textColor2" name="textColor2" value="#000000">
@@ -176,10 +141,21 @@
                             <option value="to left">Справа налево</option>
                         </select>
                     </div>
+                <div class="row">
+                    <label><input type="checkbox" id="textStrokeToggle"> Обводка текста</label>
+                </div>
+                <div id="textStrokeControls" style="display: none;">
+                    <div class="row">
+                        <input type="color" id="textStrokeColor" value="#000000">
+                        <input type="number" id="textStrokeWidth" value="1" min="1" max="5">
+                        <input type="range" id="textStrokeWidthRange" min="1" max="5" value="1">
+                        <span>px</span>
+                    </div>
+                </div>
                 </div>
             </div>
 
-            <!-- Слайдеры для настройки высоты, размера, закругления и смещения -->
+            <!-- ========== SLIDERS (СЛАЙДЕРЫ НАСТРОЕК) ========== -->
             <div class="form-group slider-group">
                 <div class="slider-item">
                     <h4>Высота</h4>
@@ -216,14 +192,12 @@
         </form>
     </div>
 
-    <!-- Модальные окна для инструкции и примера -->
+    <!-- ========== MODALS (МОДАЛЬНЫЕ ОКНА) ========== -->
     <!-- Окно инструкции -->
     <div id="instructionModal" class="modal">
         <div class="modal-content">
             <button class="close">&times;</button>
-            <div class="modal-body">
-                <iframe id="instructionFrame" class="modal-iframe" src="doc.html"></iframe>
-            </div>
+            <div class="modal-body"><iframe id="instructionFrame" class="modal-iframe" src="doc.html"></iframe></div>
         </div>
     </div>
 
@@ -231,9 +205,7 @@
     <div id="exampleModal" class="modal">
         <div class="modal-content">
             <button class="close">&times;</button>
-            <div class="modal-body">
-                <img src="example.png" class="modal-image" alt="Пример">
-            </div>
+            <div class="modal-body"><img src="example.png" class="modal-image" alt="Пример"></div>
         </div>
     </div>
 
@@ -241,18 +213,16 @@
     <div id="exampleStickModal" class="modal">
         <div class="modal-content">
             <button class="close">&times;</button>
-            <div class="modal-body">
-                <iframe id="exampleStickFrame" class="modal-iframe" src="exampleStick.html"></iframe>
-            </div>
+            <div class="modal-body"><iframe id="exampleStickFrame" class="modal-iframe" src="exampleStick.html"></iframe></div>
         </div>
     </div>
 
-    <!-- Область предпросмотра и кнопка скачивания -->
+    <!-- ========== PREVIEW AREA (ОБЛАСТЬ ПРЕДПРОСМОТРА) ========== -->
     <div class="preview" id="previewContainer"></div>
     <div class="canvas-container" id="canvasContainer"></div>
     <button id="downloadAll">Скачать архив</button>
 
-    <!-- Подключение внешних библиотек и скриптов -->
+    <!-- ========== SCRIPTS (ПОДКЛЮЧЕНИЕ СКРИПТОВ) ========== -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chroma-js/2.1.0/chroma.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>

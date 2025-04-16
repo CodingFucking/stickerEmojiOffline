@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Индивидуальные стикеры и эмодзи</title>
+    <link rel="stylesheet" href="styles/cases.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.4/lottie.min.js"></script>
+    <!-- <script src="mediaData.js"></script> -->
+</head>
+<body>
+    <div class="content-container">
+        <h1>Индивидуальные стикеры и эмодзи</h1>
+        <p>Для заказа писать <a href="https://t.me/dzhv_fx" target="_blank">@dzhv_fx</a></p>
+        
+        <div id="content">
+            <!-- Секция стикеров -->
+            <div class="main-category">
+                <h2>Стикеры</h2>
+                
+                <div class="sub-category">
+                    <h3>Анимированные</h3>
+                    <div class="media-container" id="animated-stickers"></div>
+                </div>
+                
+                <div class="sub-category">
+                    <h3>Видео</h3>
+                    <div class="media-container" id="video-stickers"></div>
+                </div>
+                
+                <div class="sub-category">
+                    <h3>Статичные</h3>
+                    <div class="media-container" id="static-stickers"></div>
+                </div>
+            </div>
+            
+            <!-- Секция эмодзи -->
+            <div class="main-category">
+                <h2>Эмодзи</h2>
+                
+                <div class="sub-category">
+                    <h3>Анимированные</h3>
+                    <div class="media-container" id="animated-emojis"></div>
+                </div>
+                
+                <div class="sub-category">
+                    <h3>Видео</h3>
+                    <div class="media-container" id="video-emojis"></div>
+                </div>
+                
+                <div class="sub-category">
+                    <h3>Статичные</h3>
+                    <div class="media-container" id="static-emojis"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Контейнер для увеличенного просмотра -->
+    <div class="media-viewer" id="mediaViewer">
+        <span class="close-viewer">&times;</span>
+        <div class="media-viewer-content" id="mediaViewerContent"></div>
+    </div>
+
+    <script>
+        // Данные медиафайлов (вручную добавленные)
+        const mediaData = {
+            "animated-stickers": [
+                // p1
+                {name: "s_1.json", path: "assets/_stickers/animated/p1/s_1.json"},
+                {name: "s_2.json", path: "assets/_stickers/animated/p1/s_2.json"},
+                {name: "s_3.json", path: "assets/_stickers/animated/p1/s_3.json"},
+                {name: "s_4.json", path: "assets/_stickers/animated/p1/s_4.json"},
+                {name: "s_5.json", path: "assets/_stickers/animated/p1/s_5.json"},
+                
+                // p2
+                {name: "s_1.json", path: "assets/_stickers/animated/p2/s_1.json"},
+                {name: "s_2.json", path: "assets/_stickers/animated/p2/s_2.json"},
+                {name: "s_3.json", path: "assets/_stickers/animated/p2/s_3.json"},
+                {name: "s_4.json", path: "assets/_stickers/animated/p2/s_4.json"},
+                {name: "s_5.json", path: "assets/_stickers/animated/p2/s_5.json"},
+                
+                // p3
+                {name: "s_1.json", path: "assets/_stickers/animated/p3/s_1.json"},
+                {name: "s_2.json", path: "assets/_stickers/animated/p3/s_2.json"},
+                {name: "s_3.json", path: "assets/_stickers/animated/p3/s_3.json"},
+                {name: "s_4.json", path: "assets/_stickers/animated/p3/s_4.json"}
+            ],
+            
+            "static-stickers": [
+                // p1
+                {name: "s_1.webp", path: "assets/_stickers/static/p1/s_1.webp"},
+                {name: "s_2.webp", path: "assets/_stickers/static/p1/s_2.webp"},
+                {name: "s_3.webp", path: "assets/_stickers/static/p1/s_3.webp"},
+                {name: "s_4.webp", path: "assets/_stickers/static/p1/s_4.webp"},
+                
+                // p2
+                {name: "s_1.png", path: "assets/_stickers/static/p2/s_1.png"},
+                {name: "s_2.png", path: "assets/_stickers/static/p2/s_2.png"},
+                {name: "s_3.png", path: "assets/_stickers/static/p2/s_3.png"},
+                {name: "s_4.png", path: "assets/_stickers/static/p2/s_4.png"},
+                
+                // p3
+                {name: "s_1.webp", path: "assets/_stickers/static/p3/s_1.webp"},
+                {name: "s_2.webp", path: "assets/_stickers/static/p3/s_2.webp"},
+                {name: "s_3.webp", path: "assets/_stickers/static/p3/s_3.webp"},
+                {name: "s_4.webp", path: "assets/_stickers/static/p3/s_4.webp"}
+            ],
+            
+            "video-stickers": [
+                // p1
+                {name: "s_1.webm", path: "assets/_stickers/video/p1/s_1.webm"},
+                {name: "s_2.webm", path: "assets/_stickers/video/p1/s_2.webm"},
+                {name: "s_3.webm", path: "assets/_stickers/video/p1/s_3.webm"},
+                
+                // p2
+                {name: "s_1.webm", path: "assets/_stickers/video/p2/s_1.webm"},
+                {name: "s_2.webm", path: "assets/_stickers/video/p2/s_2.webm"},
+                {name: "s_3.webm", path: "assets/_stickers/video/p2/s_3.webm"},
+                
+                // p3
+                {name: "s_1.webm", path: "assets/_stickers/video/p3/s_1.webm"},
+                {name: "s_2.webm", path: "assets/_stickers/video/p3/s_2.webm"},
+                {name: "s_3.webm", path: "assets/_stickers/video/p3/s_3.webm"}
+            ],
+            
+            "animated-emojis": [
+                // p1
+                {name: "e_1.json", path: "assets/_emojis/animated/p1/e_1.json"},
+                {name: "e_2.json", path: "assets/_emojis/animated/p1/e_2.json"},
+                {name: "e_3.json", path: "assets/_emojis/animated/p1/e_3.json"},
+                {name: "e_4.json", path: "assets/_emojis/animated/p1/e_4.json"},
+                {name: "e_5.json", path: "assets/_emojis/animated/p1/e_5.json"},
+                
+                // p2
+                {name: "e_1.json", path: "assets/_emojis/animated/p2/e_1.json"},
+                {name: "e_2.json", path: "assets/_emojis/animated/p2/e_2.json"},
+                {name: "e_3.json", path: "assets/_emojis/animated/p2/e_3.json"},
+                {name: "e_4.json", path: "assets/_emojis/animated/p2/e_4.json"}
+            ],
+            
+            "static-emojis": [
+                // p1
+                {name: "e_1.png", path: "assets/_emojis/static/p1/e_1.png"},
+                {name: "e_2.png", path: "assets/_emojis/static/p1/e_2.png"},
+                {name: "e_3.png", path: "assets/_emojis/static/p1/e_3.png"},
+                {name: "e_4.png", path: "assets/_emojis/static/p1/e_4.png"},
+                {name: "e_5.png", path: "assets/_emojis/static/p1/e_5.png"},
+                {name: "e_6.png", path: "assets/_emojis/static/p1/e_6.png"},
+                {name: "e_7.png", path: "assets/_emojis/static/p1/e_7.png"},
+                {name: "e_8.png", path: "assets/_emojis/static/p1/e_8.png"},
+                {name: "e_9.png", path: "assets/_emojis/static/p1/e_9.png"},
+                {name: "e_10.png", path: "assets/_emojis/static/p1/e_10.png"},
+                {name: "e_11.png", path: "assets/_emojis/static/p1/e_11.png"},
+                {name: "e_12.png", path: "assets/_emojis/static/p1/e_12.png"},
+                {name: "e_13.png", path: "assets/_emojis/static/p1/e_13.png"},
+                {name: "e_14.png", path: "assets/_emojis/static/p1/e_14.png"},
+                {name: "e_15.png", path: "assets/_emojis/static/p1/e_15.png"}
+            ],
+            
+            "video-emojis": [
+                // p1
+                {name: "e_1.webm", path: "assets/_emojis/video/p1/e_1.webm"},
+                {name: "e_2.webm", path: "assets/_emojis/video/p1/e_2.webm"},
+                {name: "e_3.webm", path: "assets/_emojis/video/p1/e_3.webm"},
+                {name: "e_4.webm", path: "assets/_emojis/video/p1/e_4.webm"},
+                {name: "e_5.webm", path: "assets/_emojis/video/p1/e_5.webm"},
+                
+                // p2
+                {name: "e_1.webm", path: "assets/_emojis/video/p2/e_1.webm"},
+                {name: "e_2.webm", path: "assets/_emojis/video/p2/e_2.webm"},
+                {name: "e_3.webm", path: "assets/_emojis/video/p2/e_3.webm"},
+                {name: "e_4.webm", path: "assets/_emojis/video/p2/e_4.webm"},
+                {name: "e_5.webm", path: "assets/_emojis/video/p2/e_5.webm"},
+                
+                // p3
+                {name: "e_1.webm", path: "assets/_emojis/video/p3/e_1.webm"},
+                {name: "e_2.webm", path: "assets/_emojis/video/p3/e_2.webm"},
+                {name: "e_3.webm", path: "assets/_emojis/video/p3/e_3.webm"},
+                {name: "e_4.webm", path: "assets/_emojis/video/p3/e_4.webm"},
+                {name: "e_5.webm", path: "assets/_emojis/video/p3/e_5.webm"},
+                
+                // p4
+                {name: "e_1.webm", path: "assets/_emojis/video/p4/e_1.webm"},
+                {name: "e_2.webm", path: "assets/_emojis/video/p4/e_2.webm"},
+                {name: "e_3.webm", path: "assets/_emojis/video/p4/e_3.webm"},
+                {name: "e_4.webm", path: "assets/_emojis/video/p4/e_4.webm"},
+                {name: "e_5.webm", path: "assets/_emojis/video/p4/e_5.webm"}
+            ]
+        };
+
+        // Функция для добавления медиа элемента
+        function addMediaToContainer(containerId, mediaItem) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            const mediaItemElement = document.createElement("div");
+            mediaItemElement.classList.add("media-item");
+            
+            let mediaElement;
+            
+            if (mediaItem.path.endsWith(".webm")) {
+                mediaElement = document.createElement("video");
+                mediaElement.src = mediaItem.path;
+                mediaElement.autoplay = true;
+                mediaElement.loop = true;
+                mediaElement.muted = true;
+                mediaElement.preload = "metadata";
+            } else if (mediaItem.path.endsWith(".png") || mediaItem.path.endsWith(".webp")) {
+                mediaElement = document.createElement("img");
+                mediaElement.src = mediaItem.path;
+                mediaElement.loading = "lazy";
+                mediaElement.alt = mediaItem.name;
+            } else if (mediaItem.path.endsWith(".json")) {
+                mediaElement = document.createElement("div");
+                mediaElement.classList.add("lottie-container");
+                
+                fetch(mediaItem.path)
+                    .then(response => response.json())
+                    .then(animationData => {
+                        lottie.loadAnimation({
+                            container: mediaElement,
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            animationData: animationData
+                        });
+                    })
+                    .catch(error => {
+                        console.error(`Ошибка загрузки анимации ${mediaItem.name}:`, error);
+                        mediaElement.textContent = "Ошибка загрузки";
+                    });
+            }
+
+            if (mediaElement) {
+                mediaItemElement.appendChild(mediaElement);
+                mediaItemElement.addEventListener('click', () => openMediaViewer(mediaItem));
+                container.appendChild(mediaItemElement);
+            }
+        }
+
+        // Функции для работы с просмотром медиа
+        const mediaViewer = document.getElementById("mediaViewer");
+        const mediaViewerContent = document.getElementById("mediaViewerContent");
+        const closeViewer = document.querySelector(".close-viewer");
+
+        function openMediaViewer(mediaItem) {
+            mediaViewerContent.innerHTML = '';
+            
+            let viewerElement;
+            if (mediaItem.path.endsWith(".webm")) {
+                viewerElement = document.createElement("video");
+                viewerElement.src = mediaItem.path;
+                viewerElement.autoplay = true;
+                viewerElement.loop = true;
+                viewerElement.controls = true;
+            } else if (mediaItem.path.endsWith(".png") || mediaItem.path.endsWith(".webp")) {
+                viewerElement = document.createElement("img");
+                viewerElement.src = mediaItem.path;
+                viewerElement.alt = mediaItem.name;
+            } else if (mediaItem.path.endsWith(".json")) {
+                viewerElement = document.createElement("div");
+                viewerElement.style.width = "300px";
+                viewerElement.style.height = "300px";
+                
+                fetch(mediaItem.path)
+                    .then(response => response.json())
+                    .then(animationData => {
+                        lottie.loadAnimation({
+                            container: viewerElement,
+                            renderer: 'svg',
+                            loop: true,
+                            autoplay: true,
+                            animationData: animationData
+                        });
+                    });
+            }
+
+            if (viewerElement) {
+                mediaViewerContent.appendChild(viewerElement);
+                mediaViewer.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+        }
+
+        function closeMediaViewer() {
+            mediaViewer.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            
+            const video = mediaViewerContent.querySelector('video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+        }
+
+        closeViewer.addEventListener('click', closeMediaViewer);
+        mediaViewer.addEventListener('click', (e) => {
+            if (e.target === mediaViewer) {
+                closeMediaViewer();
+            }
+        });
+
+        // Управление темой
+        const urlParams = new URLSearchParams(window.location.search);
+        const theme = urlParams.get('theme');
+        if (theme === 'dark') {
+            document.body.classList.add('dark-theme');
+        }
+
+        // Функции для работы с iframe
+        function sendHeight() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({
+                type: 'iframeHeight',
+                height: height,
+                id: window.frameElement?.id
+            }, '*');
+        }
+
+        window.addEventListener('load', sendHeight);
+        new ResizeObserver(sendHeight).observe(document.body);
+
+        window.addEventListener('message', function(event) {
+            if (event.data.type === 'requestHeight' && event.data.id === window.frameElement?.id) {
+                sendHeight();
+            }
+        });
+
+        // Заполняем контейнеры медиафайлами
+        document.addEventListener('DOMContentLoaded', function() {
+            for (const [containerId, items] of Object.entries(mediaData)) {
+                items.forEach(item => {
+                    addMediaToContainer(containerId, item);
+                });
+            }
+        });
+    </script>
+</body>
+</html>

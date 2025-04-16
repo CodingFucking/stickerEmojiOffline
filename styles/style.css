@@ -1,0 +1,648 @@
+/* ==================== БАЗОВЫЕ СТИЛИ ==================== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+/* ==================== ОСНОВНЫЕ ПЕРЕМЕННЫЕ ==================== */
+:root {
+  --border-radius-ui: 15px;
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --modal-background: #fefefe;
+  --modal-text: #333;
+  --modal-border: #888;
+  --primary-color: #007bff;
+  --primary-hover: #0056b3;
+  --secondary-color: #555;
+  --secondary-hover: #444;
+}
+
+/* ==================== ТЕМНАЯ ТЕМА ==================== */
+body.dark-theme {
+  --background-color: #333;
+  --text-color: #f0f0f0;
+  --modal-background: #444;
+  --modal-text: #f0f0f0;
+  --modal-border: #555;
+}
+
+body.dark-theme header,
+body.dark-theme .container,
+body.dark-theme .form-container {
+  background-color: #444;
+  color: #f0f0f0;
+  border-color: #555;
+}
+
+body.dark-theme input,
+body.dark-theme select,
+body.dark-theme .style-button {
+  background-color: #555;
+  color: #f0f0f0;
+  border-color: #777;
+}
+
+body.dark-theme label,
+body.dark-theme .compact-preview-label {
+  color: #f0f0f0;
+}
+
+body.dark-theme .theme-switcher,
+body.dark-theme .compact-preview-label {
+  background-color: var(--primary-color);
+}
+
+body.dark-theme .theme-switcher:hover,
+body.dark-theme .compact-preview-label:hover {
+  background-color: var(--primary-color);
+}
+
+/* ==================== ОСНОВНЫЕ СТИЛИ ==================== */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  margin: 15px;
+  padding: 20px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+h1 {
+  font-size: 2.5rem;
+  text-align: center;
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+h4 {
+  margin: 5px 0;
+}
+
+/* ==================== ШАПКА ==================== */
+header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  background-color: white;
+  border-radius: var(--border-radius-ui);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin: -20px 0 20px;
+  gap: 15px;
+  min-height: 20px; /* Минимальная высота */
+}
+
+.title-wrapper {
+  display: flex;
+  align-items: baseline;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.title {
+  margin: 0;
+  font-size: clamp(16px, 4vw, 20px); /* Адаптивный размер текста */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.version {
+  font-size: clamp(10px, 2.5vw, 12px);
+  color: #666;
+  opacity: 0.8;
+  white-space: nowrap;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.dark-theme .version {
+  color: #aaa;
+}
+
+/* ==================== БУРГЕР-МЕНЮ ==================== */
+.burger-menu {
+    display: inline-block;
+    cursor: pointer;
+    position: absolute;
+    z-index: 100;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 5px;
+    background: transparent;
+    border: none;
+    order: 1; /* Перемещаем в конец контейнера */
+}
+
+.burger-menu .bar {
+    display: block;
+    height: 2px;
+    width: 25px;
+    background: var(--primary-color);
+    position: relative;
+    transition: all 300ms ease-out;
+}
+
+.burger-menu .bar::before,
+.burger-menu .bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 25px;
+    height: 2px;
+    background: var(--primary-color);
+    transition: all 300ms ease-out;
+    transform-origin: center;
+}
+
+.burger-menu .bar::before {
+    transform: translateY(-8px);
+}
+
+.burger-menu .bar::after {
+    transform: translateY(8px);
+}
+
+/* Анимация активного состояния */
+.burger-menu.active .bar {
+    background: transparent;
+}
+
+.burger-menu.active .bar::before {
+    transform: translateY(0) rotate(45deg);
+}
+
+.burger-menu.active .bar::after {
+    transform: translateY(0) rotate(-45deg);
+}
+
+
+
+/* ==================== ВЫПАДАЮЩЕЕ МЕНЮ ==================== */
+.controls-container {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 64px;
+  right: 0px;
+  background-color: var(--modal-background);
+  border-radius: var(--border-radius-ui);
+  padding: 10px;
+  z-index: 1000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  min-width: 200px;
+  color: var(--modal-text);
+  opacity: 0;
+  transform: translateY(-10px);
+  visibility: hidden;
+  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+}
+
+.controls-container.active {
+  opacity: 1;
+  transform: translateY(0);
+  visibility: visible;
+}
+
+.controls-container button {
+  padding: 10px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius-ui);
+  cursor: pointer;
+  font-size: 15px;
+  margin: 5px 0;
+  width: 100%;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  transition: background-color 0.2s ease;
+}
+
+.controls-container button:hover {
+  background-color: var(--primary-hover);
+}
+
+/* ==================== КОНТЕЙНЕРЫ ==================== */
+.container,
+.form-container {
+  position: relative;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 10px;
+  background-color: white;
+  border-radius: var(--border-radius-ui);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* ==================== СЛАЙДЕРЫ ==================== */
+.form-group.slider-group {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 10px;
+}
+
+.slider-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0px;
+  font-size: 14px;
+}
+
+.slider-item label {
+  font-size: 14px;
+  color: var(--text-color);
+}
+
+.slider-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.slider-item input[type="number"] {
+  width: 50px;
+  text-align: center;
+  padding: 2px 5px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius-ui);
+}
+
+.slider-item input[type="range"] {
+  flex: 1;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: var(--border-radius-ui);
+  background: #ddd;
+  outline: none;
+  transition: background 0.2s;
+}
+
+.slider-item input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  cursor: pointer;
+}
+
+.slider-item input[type="range"]:hover {
+  background: #bbb;
+}
+
+/* ==================== КНОПКИ СТИЛЕЙ ==================== */
+.style-buttons {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.style-button {
+  position: relative;
+  cursor: pointer;
+  border: 0.01px solid var(--secondary-color);
+  border-radius: var(--border-radius-ui);
+  padding: 6px;
+  background: white;
+  transition: 0.2s;
+}
+
+.style-button:hover {
+  background-color: #f0f0f0;
+}
+
+/* Стиль для активной (нажатой) кнопки */
+.style-button.active {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+/* Стиль для чекбокса (скрыт) */
+.style-button input {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Стиль для span внутри кнопки */
+.style-button span {
+  font-size: 18px;
+  display: block;
+  width: 24px;
+  text-align: center;
+}
+
+/* Стили для разных типов кнопок */
+.bold span { font-weight: 900 !important; }
+.italic span { font-style: italic !important; }
+.underline span { text-decoration: underline !important; }
+.strike span { text-decoration: line-through !important; }
+.uppercase span { text-transform: uppercase !important; }
+
+
+.style-button.active {
+    background-color: var(--primary-color) !important;
+    color: white !important;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* ==================== ПОЛЯ ВВОДА ==================== */
+.inline-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  margin-top: -5px;
+}
+
+.inline-group input[type="text"],
+.inline-group select {
+  flex-grow: 1;
+  min-width: 150px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: var(--border-radius-ui);
+}
+
+/* ==================== ХОЛСТ ==================== */
+.canvas-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+canvas {
+  border: 1px solid #ccc;
+  background-image: linear-gradient(45deg, #ddd 25%, transparent 25%),
+                  linear-gradient(-45deg, #ddd 25%, transparent 25%),
+                  linear-gradient(45deg, transparent 75%, #ddd 75%),
+                  linear-gradient(-45deg, transparent 75%, #ddd 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
+}
+
+/* ==================== КНОПКА СКАЧИВАНИЯ ==================== */
+#downloadAll {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 16px;
+  display: none;
+  text-align: center;
+}
+
+#downloadAll:hover {
+  background-color: var(--primary-hover);
+}
+
+/* ==================== ПРЕВЬЮ ==================== */
+.preview {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.preview canvas {
+  margin: 8px;
+}
+
+/* ==================== ВЫБОР ЦВЕТА ==================== */
+.color-picker-wrapper {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: start;
+  margin-top: -10px;
+}
+
+.color-picker-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.color-picker-container label:first-child {
+  font-weight: bold;
+}
+
+.color-picker-container input[type="color"] {
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.color-picker-container .row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#bgGradientColorContainer,
+#textGradientColorContainer {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* ==================== МОДАЛЬНЫЕ ОКНА ==================== */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100vh;
+  background-color: rgba(0,0,0,0.5);
+  backdrop-filter: blur(5px);
+  overflow: auto;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: var(--modal-background);
+  margin: 0 auto;
+  padding: 20px;
+  border-radius: 12px;
+  width: 80%;
+  min-width: 100px;
+  max-height: calc(100vh - 40px);
+  position: relative;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+}
+
+.close {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  font-size: 28px;
+  font-weight: bold;
+  color: var(--modal-text);
+  cursor: pointer;
+  background: none;
+  border: none;
+  transition: color 0.2s;
+  z-index: 2;
+  line-height: 1;
+  margin: 0;
+  padding: 5px;
+}
+
+.close:hover {
+  color: var(--primary-color);
+}
+
+.modal-body {
+  flex: 1;
+  overflow: auto;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.modal-image {
+  max-width: 100%;
+  max-height: calc(100vh - 100px);
+  width: auto;
+  height: auto;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.modal-iframe {
+  width: 100%;
+  height: calc(100vh - 100px);
+  min-height: 300px;
+  border: none;
+  border-radius: 8px;
+  background: var(--modal-background);
+}
+
+/* ==================== ДОПОЛНИТЕЛЬНЫЕ ЭЛЕМЕНТЫ ==================== */
+#textStrokeControls {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgba(0,0,0,0.05);
+  border-radius: var(--border-radius-ui);
+}
+
+#textStrokeControls .row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#textStrokeColor {
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+#textStrokeWidth {
+  width: 50px;
+  padding: 5px;
+  border: 1px solid var(--input-border);
+  border-radius: 4px;
+}
+
+.word-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px;
+  margin-bottom: 20px;
+}
+
+/* ==================== АДАПТИВ ==================== */
+@media (max-width: 768px) {
+  body {
+    padding: 15px;
+    margin: 15px;
+  }
+  
+  .form-group.slider-group {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 750px) {
+  .modal {
+    padding: 20px;
+  }
+  
+  .modal-content {
+    padding: 25px;
+    max-height: calc(100vh - 20px);
+  }
+  
+  .close {
+    right: 5px;
+    top: 5px;
+    font-size: 24px;
+  }
+  
+  .modal-iframe {
+    height: calc(100vh - 80px);
+  }
+  
+  .modal-image {
+    max-height: calc(100vh - 80px);
+  }
+}
+
+@media (max-width: 600px) {
+  .color-picker-wrapper {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .inline-group input[type="text"],
+  .inline-group select {
+    min-width: 100%;
+  }
+  
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .burger-menu {
+    align-self: flex-end;
+/*    margin-top: -15px;*/
+  }
+}

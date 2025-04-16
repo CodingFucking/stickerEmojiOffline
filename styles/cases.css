@@ -1,0 +1,236 @@
+/* ========== BASE STYLES ========== */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+:root {
+  /* Color scheme */
+  --bg-color: #fefefe;
+  --text-color: #333;
+  --code-bg: #f4f4f4;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-track: #f1f1f1;
+  --media-shadow: 0 4px 6px rgba(0, 0, 0, 0.0);
+  --link-color: #0077cc;
+  --viewer-border: 0.5px solid rgba(0, 0, 0, 0.2);
+  
+  /* Sizes */
+  --preview-size: 75px;
+  --border-radius: 10px;
+  --viewer-radius: 15px;
+  
+  /* Transitions */
+  --transition: 0.3s ease;
+}
+
+/* ========== DARK THEME ========== */
+body.dark-theme {
+  --bg-color: #444;
+  --text-color: #f0f0f0;
+  --code-bg: #555;
+  --scrollbar-thumb: #666;
+  --scrollbar-track: #444;
+  --media-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+  --link-color: #4da6ff;
+  --viewer-border: 0.5px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ========== BODY & CONTAINERS ========== */
+body {
+  font-family: 'Montserrat', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 20px;
+  transition: background-color var(--transition), color var(--transition);
+  overflow-x: hidden;
+}
+
+.content-container {
+  max-height: calc(100vh - 40px);
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+/* ========== TYPOGRAPHY ========== */
+h1, h2 {
+  color: var(--text-color);
+  margin: 20px 0;
+}
+
+h2 {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.3em;
+}
+
+body.dark-theme h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+p {
+  margin: 10px 0;
+  line-height: 1.5;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* ========== MEDIA ELEMENTS ========== */
+.category {
+  margin-top: 30px;
+}
+
+.media-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: left;
+  margin: 15px 0;
+}
+
+.media-item {
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.media-item:hover {
+  transform: scale(1.05);
+}
+
+.media-container img,
+.media-container video,
+.lottie-container {
+  width: var(--preview-size);
+  height: var(--preview-size);
+  border-radius: var(--border-radius);
+  box-shadow: var(--media-shadow);
+  background: 
+    linear-gradient(45deg, var(--code-bg) 25%, transparent 25%, transparent 75%, var(--code-bg) 75%),
+    linear-gradient(45deg, var(--code-bg) 25%, transparent 25%, transparent 75%, var(--code-bg) 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 10px 10px;
+  object-fit: cover;
+}
+
+.media-container video {
+  autoplay: true;
+  loop: true;
+  muted: true;
+}
+
+.lottie-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/* ========== MEDIA VIEWER ========== */
+.media-viewer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(5px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--transition), visibility var(--transition);
+  padding: 20px;
+  box-sizing: border-box;
+  overflow-y: auto; /* Добавляем скролл для модального окна */
+}
+
+.media-viewer.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.media-viewer-content {
+  position: relative;
+  max-width: min(90%, 800px); /* Ограничиваем максимальную ширину */
+  max-height: min(90vh, 90%); /* Ограничиваем высоту относительно viewport */
+  width: auto;
+  height: auto;
+  transition: transform var(--transition);
+  transform: scale(0.8);
+  margin: auto; /* Центрируем контент */
+  overflow-y: auto; /* Скролл для контента */
+  -webkit-overflow-scrolling: touch; /* Плавный скролл на iOS */
+}
+
+.media-viewer.active .media-viewer-content {
+  transform: scale(1);
+}
+
+.media-viewer img,
+.media-viewer video,
+.media-viewer .lottie-container {
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: var(--viewer-radius);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.0);
+  border: var(--viewer-border);
+  display: block; /* Убираем лишнее пространство снизу */
+}
+
+.media-viewer .lottie-container {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  aspect-ratio: 1/1; /* Сохраняем пропорции */
+}
+
+.close-viewer {
+  position: fixed; /* Фиксируем относительно viewport */
+  top: 20px;
+  right: 20px;
+  color: white;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1001;
+  background: rgba(0, 0, 0, 0.5);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+}
+
+/* Оптимизация для мобильных устройств */
+@media (max-width: 768px) {
+  .media-viewer {
+    padding: 10px;
+    align-items: flex-start; /* Начинаем от верхнего края */
+    padding-top: 60px; /* Место для кнопки закрытия */
+  }
+  
+  .media-viewer-content {
+    max-width: 95%;
+    max-height: 80vh;
+  }
+  
+  .close-viewer {
+    top: 10px;
+    right: 10px;
+  }
+}

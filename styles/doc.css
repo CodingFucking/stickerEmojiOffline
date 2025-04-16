@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+:root {
+  --background-color: #fefefe;
+  --text-color: #333;
+  --code-background: #f4f4f4;
+  --code-text: #333;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-track: #f1f1f1;
+  --content-padding: 20px;
+}
+
+body.dark-theme {
+  --background-color: #444;
+  --text-color: #f0f0f0;
+  --code-background: #555;
+  --code-text: #f0f0f0;
+  --scrollbar-thumb: #666;
+  --scrollbar-track: #444;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  font-family: 'Montserrat', sans-serif;
+  margin: 0;
+  padding: 15px var(--content-padding);
+  transition: background-color 0.3s, color 0.3s;
+  overflow-x: hidden;
+  min-width: 0;
+  word-wrap: break-word;
+}
+
+.content-container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-y: auto;
+  padding-right: 15px;
+}
+
+/* ========== SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  background: transparent;
+}
+
+h1, h2, h3 {
+  color: var(--text-color);
+  margin-top: 1.2em;
+  margin-bottom: 0.8em;
+  line-height: 1.3;
+}
+
+h2 {
+  font-size: 1.4em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  padding-bottom: 0.3em;
+}
+
+body.dark-theme h2 {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+p {
+  line-height: 1.6;
+  margin: 0.8em 0;
+}
+
+code {
+  background-color: var(--code-background);
+  color: var(--code-text);
+  padding: 2px 4px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+  word-break: break-word;
+}
+
+a {
+  color: #007bff;
+  text-decoration: none;
+  word-break: break-all;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ol, ul {
+  padding-left: 1.2em;
+  line-height: 1.6;
+  margin: 1em 0;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+strong {
+  font-weight: 700;
+}
+
+@media (max-width: 768px) {
+  :root {
+    --content-padding: 15px;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --content-padding: 10px;
+  }
+  
+  body {
+    font-size: 14px;
+  }
+  
+  h2 {
+    font-size: 1.2em;
+  }
+  
+  h3 {
+    font-size: 1.1em;
+  }
+  
+  .content-container {
+    padding-right: 5px;
+  }
+  
+  ol, ul {
+    padding-left: 1em;
+  }
+}
+
+@media (max-width: 320px) {
+  body {
+    font-size: 13px;
+  }
+}

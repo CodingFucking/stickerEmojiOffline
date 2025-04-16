@@ -294,7 +294,15 @@
             mediaViewerContent.innerHTML = '';
             
             let viewerElement;
-            const filePath = mediaItem.path.split('?')[0]; // Удаляем параметры запроса
+            const filePath = mediaItem.path.split('?')[0];
+            
+            // Создаем контейнер для центрирования
+            const container = document.createElement('div');
+            container.style.display = 'flex';
+            container.style.alignItems = 'center';
+            container.style.justifyContent = 'center';
+            container.style.width = '100%';
+            container.style.height = '100%';
             
             if (filePath.endsWith(".webm")) {
                 viewerElement = document.createElement("video");
@@ -302,14 +310,17 @@
                 viewerElement.autoplay = true;
                 viewerElement.loop = true;
                 viewerElement.controls = true;
+                viewerElement.style.maxHeight = "90vh";
+                viewerElement.style.maxWidth = "90vw";
             } else if (filePath.endsWith(".png") || filePath.endsWith(".webp")) {
                 viewerElement = document.createElement("img");
                 viewerElement.src = mediaItem.path;
                 viewerElement.alt = mediaItem.name;
+                viewerElement.style.maxHeight = "90vh";
+                viewerElement.style.maxWidth = "90vw";
             } else if (filePath.endsWith(".json")) {
                 viewerElement = document.createElement("div");
-                viewerElement.style.width = "300px";
-                viewerElement.style.height = "300px";
+                viewerElement.className = "lottie-container";
                 
                 fetch(mediaItem.path)
                     .then(response => response.json())
@@ -321,13 +332,23 @@
                             autoplay: true,
                             animationData: animationData
                         });
+                    })
+                    .catch(error => {
+                        console.error("Error loading animation:", error);
+                        viewerElement.innerHTML = "Error loading animation";
                     });
             }
 
             if (viewerElement) {
-                mediaViewerContent.appendChild(viewerElement);
+                container.appendChild(viewerElement);
+                mediaViewerContent.appendChild(container);
                 mediaViewer.classList.add('active');
                 document.body.style.overflow = 'hidden';
+                
+                // Форсируем пересчёт layout
+                setTimeout(() => {
+                    mediaViewerContent.scrollTop = 0;
+                }, 50);
             }
         }
 

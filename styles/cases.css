@@ -60,10 +60,18 @@ body {
 /* ========== TYPOGRAPHY ========== */
 h1, h2 {
   color: var(--text-color);
-  margin: 20px 0;
+  margin: 15px 0;
+  line-height: 1.3;
+}
+
+h1 {
+  font-size: 2rem; /* 32px */
+  font-weight: 700;
 }
 
 h2 {
+  font-size: 1.5rem; /* 24px */
+  font-weight: 700;
   border-bottom: 1px solid rgba(0, 0, 0, 0.1);
   padding-bottom: 0.3em;
 }
@@ -97,7 +105,7 @@ a:hover {
   flex-wrap: wrap;
   gap: 20px;
   justify-content: left;
-  margin: 15px 0;
+  margin: 15px 30px;
 }
 
 .media-item {
@@ -137,142 +145,77 @@ a:hover {
   justify-content: center;
 }
 
-/* ========== MEDIA VIEWER ========== */
-.media-viewer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-  backdrop-filter: blur(5px);
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity var(--transition), visibility var(--transition);
-  box-sizing: border-box;
-  overflow-y: auto;
-  padding: 20px;
-}
-
-.media-viewer.active {
-  opacity: 1;
-  visibility: visible;
-}
-
-.media-viewer-content {
+/* ========== MEDIA ITEMS ========== */
+/* ========== MEDIA ITEMS ========== */
+.media-item {
   position: relative;
-  max-width: min(90vw, 800px);
-  max-height: min(90vh, 90%);
-  width: auto;
-  height: auto;
-  transition: transform var(--transition);
-  transform: scale(0.8);
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  cursor: pointer; /* Возвращаем pointer для тач-устройств */
+  transition: transform 0.3s ease;
+  transform-origin: center center;
 }
 
-.media-viewer.active .media-viewer-content {
-  transform: scale(1);
+.media-item:hover,
+.media-item:active { /* Добавляем :active для тач-устройств */
+  transform: scale(1.2);
+  z-index: 10;
 }
 
-.media-viewer img,
-.media-viewer video {
-  width: auto;
-  height: auto;
-  max-width: 100%;
-  max-height: 80vh;
-  border-radius: var(--viewer-radius);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-  border: var(--viewer-border);
-  display: block;
-  background: none; /* Убираем шахматный фон */
+/* Анимация увеличения */
+.media-container img,
+.media-container video,
+.media-container .lottie-container {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  width: var(--preview-size);
+  height: var(--preview-size);
+  object-fit: cover;
+  border-radius: var(--border-radius);
 }
 
-.media-viewer .lottie-container {
-  width: 100%;
-  max-width: 300px;
-  height: auto;
-  aspect-ratio: 1/1;
-  background: none !important; /* Убираем шахматный фон */
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.media-item:hover img,
+.media-item:hover video,
+.media-item:hover .lottie-container,
+.media-item:active img, /* Добавляем для тач-устройств */
+.media-item:active video,
+.media-item:active .lottie-container {
+  transform: scale(1.2);
+  z-index: 10;
 }
 
-.close-viewer {
-  position: fixed;
-  top: 20px;
-  right: 20px;
-  color: white;
-  font-size: 30px;
-  cursor: pointer;
-  z-index: 1001;
-  background: rgba(0, 0, 0, 0.5);
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-}
-
-/* Медиа-просмотр для мобильных */
+/* Мобильная версия - 3 колонки */
 @media (max-width: 768px) {
-  .media-viewer {
-    align-items: flex-start; /* Изменено с center на flex-start */
-    padding-top: 60px; /* Добавлено место для кнопки закрытия */
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-/*    background-color: rgba(0, 0, 0, 0.95);*/
-    z-index: 10000;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding: 0;
+  h1 {
+    font-size: 1.5rem; /* 24px */
+    margin: 12px 0;
   }
-
-  .media-viewer img,
-  .media-viewer video,
-  .media-viewer .lottie-container {
-    max-height: 70vh;
-    width: auto;
-    height: auto;
-    margin: auto; /* Центрирование */
+  
+  h2 {
+    font-size: 1.25rem; /* 20px */
+    margin: 10px 0;
   }
-
-
-  .media-viewer-content {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: calc(100vh - 80px); /* Учитываем кнопку закрытия */
-    padding: 20px 10px;
+  
+  .media-container {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    justify-items: center;
   }
-
-  .media-viewer video {
+  
+  .media-container img,
+  .media-container video,
+  .media-container .lottie-container {
     width: 100%;
     height: auto;
-    max-height: 70vh;
+    aspect-ratio: 1/1;
   }
-
-  .close-viewer {
-    position: fixed;
-    top: 15px;
-    right: 15px;
-    z-index: 10001;
-/*    background: rgba(0, 0, 0, 0.7);*/
-    width: 45px;
-    height: 45px;
-    font-size: 30px;
-    border: 2px solid white;
+  
+  /* Усиливаем эффект для мобилок */
+  .media-item:active {
+    transform: scale(1.15);
+  }
+  
+  .media-item:active img,
+  .media-item:active video,
+  .media-item:active .lottie-container {
+    transform: scale(1.15);
   }
 }

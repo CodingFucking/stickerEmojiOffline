@@ -2,11 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Индивидуальные стикеры и эмодзи</title>
     <link rel="stylesheet" href="styles/cases.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.4/lottie.min.js"></script>
-    <!-- <script src="mediaData.js"></script> -->
 </head>
 <body>
     <div class="content-container">
@@ -14,40 +13,32 @@
         <p>Для заказа писать <a href="https://t.me/dzhv_fx" target="_blank">@dzhv_fx</a></p>
         
         <div id="content">
-            <!-- Секция стикеров -->
             <div class="main-category">
                 <h2>Стикеры</h2>
-                
                 <div class="sub-category">
                     <h3>Анимированные</h3>
                     <div class="media-container" id="animated-stickers"></div>
                 </div>
-                
                 <div class="sub-category">
                     <h3>Видео</h3>
                     <div class="media-container" id="video-stickers"></div>
                 </div>
-                
                 <div class="sub-category">
                     <h3>Статичные</h3>
                     <div class="media-container" id="static-stickers"></div>
                 </div>
             </div>
             
-            <!-- Секция эмодзи -->
             <div class="main-category">
                 <h2>Эмодзи</h2>
-                
                 <div class="sub-category">
                     <h3>Анимированные</h3>
                     <div class="media-container" id="animated-emojis"></div>
                 </div>
-                
                 <div class="sub-category">
                     <h3>Видео</h3>
                     <div class="media-container" id="video-emojis"></div>
                 </div>
-                
                 <div class="sub-category">
                     <h3>Статичные</h3>
                     <div class="media-container" id="static-emojis"></div>
@@ -56,91 +47,67 @@
         </div>
     </div>
 
-    <!-- Контейнер для увеличенного просмотра -->
     <div class="media-viewer" id="mediaViewer">
         <span class="close-viewer">&times;</span>
         <div class="media-viewer-content" id="mediaViewerContent"></div>
     </div>
 
     <script>
-        // Данные медиафайлов (вручную добавленные)
+        // Полные данные медиафайлов
         const mediaData = {
             "animated-stickers": [
-                // p1
                 {name: "s_1.json", path: "assets/_stickers/animated/p1/s_1.json"},
                 {name: "s_2.json", path: "assets/_stickers/animated/p1/s_2.json"},
                 {name: "s_3.json", path: "assets/_stickers/animated/p1/s_3.json"},
                 {name: "s_4.json", path: "assets/_stickers/animated/p1/s_4.json"},
                 {name: "s_5.json", path: "assets/_stickers/animated/p1/s_5.json"},
-                
-                // p2
                 {name: "s_1.json", path: "assets/_stickers/animated/p2/s_1.json"},
                 {name: "s_2.json", path: "assets/_stickers/animated/p2/s_2.json"},
                 {name: "s_3.json", path: "assets/_stickers/animated/p2/s_3.json"},
                 {name: "s_4.json", path: "assets/_stickers/animated/p2/s_4.json"},
                 {name: "s_5.json", path: "assets/_stickers/animated/p2/s_5.json"},
-                
-                // p3
                 {name: "s_1.json", path: "assets/_stickers/animated/p3/s_1.json"},
                 {name: "s_2.json", path: "assets/_stickers/animated/p3/s_2.json"},
                 {name: "s_3.json", path: "assets/_stickers/animated/p3/s_3.json"},
                 {name: "s_4.json", path: "assets/_stickers/animated/p3/s_4.json"}
             ],
-            
             "static-stickers": [
-                // p1
                 {name: "s_1.webp", path: "assets/_stickers/static/p1/s_1.webp"},
                 {name: "s_2.webp", path: "assets/_stickers/static/p1/s_2.webp"},
                 {name: "s_3.webp", path: "assets/_stickers/static/p1/s_3.webp"},
                 {name: "s_4.webp", path: "assets/_stickers/static/p1/s_4.webp"},
-                
-                // p2
                 {name: "s_1.png", path: "assets/_stickers/static/p2/s_1.png"},
                 {name: "s_2.png", path: "assets/_stickers/static/p2/s_2.png"},
                 {name: "s_3.png", path: "assets/_stickers/static/p2/s_3.png"},
                 {name: "s_4.png", path: "assets/_stickers/static/p2/s_4.png"},
-                
-                // p3
                 {name: "s_1.webp", path: "assets/_stickers/static/p3/s_1.webp"},
                 {name: "s_2.webp", path: "assets/_stickers/static/p3/s_2.webp"},
                 {name: "s_3.webp", path: "assets/_stickers/static/p3/s_3.webp"},
                 {name: "s_4.webp", path: "assets/_stickers/static/p3/s_4.webp"}
             ],
-            
             "video-stickers": [
-                // p1
                 {name: "s_1.webm", path: "assets/_stickers/video/p1/s_1.webm"},
                 {name: "s_2.webm", path: "assets/_stickers/video/p1/s_2.webm"},
                 {name: "s_3.webm", path: "assets/_stickers/video/p1/s_3.webm"},
-                
-                // p2
                 {name: "s_1.webm", path: "assets/_stickers/video/p2/s_1.webm"},
                 {name: "s_2.webm", path: "assets/_stickers/video/p2/s_2.webm"},
                 {name: "s_3.webm", path: "assets/_stickers/video/p2/s_3.webm"},
-                
-                // p3
                 {name: "s_1.webm", path: "assets/_stickers/video/p3/s_1.webm"},
                 {name: "s_2.webm", path: "assets/_stickers/video/p3/s_2.webm"},
                 {name: "s_3.webm", path: "assets/_stickers/video/p3/s_3.webm"}
             ],
-            
             "animated-emojis": [
-                // p1
                 {name: "e_1.json", path: "assets/_emojis/animated/p1/e_1.json"},
                 {name: "e_2.json", path: "assets/_emojis/animated/p1/e_2.json"},
                 {name: "e_3.json", path: "assets/_emojis/animated/p1/e_3.json"},
                 {name: "e_4.json", path: "assets/_emojis/animated/p1/e_4.json"},
                 {name: "e_5.json", path: "assets/_emojis/animated/p1/e_5.json"},
-                
-                // p2
                 {name: "e_1.json", path: "assets/_emojis/animated/p2/e_1.json"},
                 {name: "e_2.json", path: "assets/_emojis/animated/p2/e_2.json"},
                 {name: "e_3.json", path: "assets/_emojis/animated/p2/e_3.json"},
                 {name: "e_4.json", path: "assets/_emojis/animated/p2/e_4.json"}
             ],
-            
             "static-emojis": [
-                // p1
                 {name: "e_1.png", path: "assets/_emojis/static/p1/e_1.png"},
                 {name: "e_2.png", path: "assets/_emojis/static/p1/e_2.png"},
                 {name: "e_3.png", path: "assets/_emojis/static/p1/e_3.png"},
@@ -157,30 +124,22 @@
                 {name: "e_14.png", path: "assets/_emojis/static/p1/e_14.png"},
                 {name: "e_15.png", path: "assets/_emojis/static/p1/e_15.png"}
             ],
-            
             "video-emojis": [
-                // p1
                 {name: "e_1.webm", path: "assets/_emojis/video/p1/e_1.webm"},
                 {name: "e_2.webm", path: "assets/_emojis/video/p1/e_2.webm"},
                 {name: "e_3.webm", path: "assets/_emojis/video/p1/e_3.webm"},
                 {name: "e_4.webm", path: "assets/_emojis/video/p1/e_4.webm"},
                 {name: "e_5.webm", path: "assets/_emojis/video/p1/e_5.webm"},
-                
-                // p2
                 {name: "e_1.webm", path: "assets/_emojis/video/p2/e_1.webm"},
                 {name: "e_2.webm", path: "assets/_emojis/video/p2/e_2.webm"},
                 {name: "e_3.webm", path: "assets/_emojis/video/p2/e_3.webm"},
                 {name: "e_4.webm", path: "assets/_emojis/video/p2/e_4.webm"},
                 {name: "e_5.webm", path: "assets/_emojis/video/p2/e_5.webm"},
-                
-                // p3
                 {name: "e_1.webm", path: "assets/_emojis/video/p3/e_1.webm"},
                 {name: "e_2.webm", path: "assets/_emojis/video/p3/e_2.webm"},
                 {name: "e_3.webm", path: "assets/_emojis/video/p3/e_3.webm"},
                 {name: "e_4.webm", path: "assets/_emojis/video/p3/e_4.webm"},
                 {name: "e_5.webm", path: "assets/_emojis/video/p3/e_5.webm"},
-                
-                // p4
                 {name: "e_1.webm", path: "assets/_emojis/video/p4/e_1.webm"},
                 {name: "e_2.webm", path: "assets/_emojis/video/p4/e_2.webm"},
                 {name: "e_3.webm", path: "assets/_emojis/video/p4/e_3.webm"},
@@ -189,150 +148,118 @@
             ]
         };
 
-        // Определяем, работает ли сайт локально или на GitHub Pages
-        const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-        const isGitHub = window.location.host.includes('github.io');
-        const basePath = isGitHub ? `/${window.location.pathname.split('/')[1]}` : '';
-
-        // Функция для получения корректного пути к файлу
-        function getCorrectedPath(originalPath) {
-            // Если работаем локально или это не GitHub, используем оригинальный путь
-            if (isLocal || !isGitHub) {
-                return originalPath;
-            }
-            // Для GitHub Pages добавляем базовый путь
-            return originalPath.startsWith('assets/') 
-                ? `${basePath}/${originalPath}`
-                : originalPath;
-        }
-
-        // Модифицированная функция добавления медиа элемента
-        function addMediaToContainer(containerId, mediaItem) {
-            const container = document.getElementById(containerId);
-            if (!container) return;
-            
-            const mediaItemElement = document.createElement("div");
-            mediaItemElement.classList.add("media-item");
-            
-            // Получаем корректный путь с учетом окружения
-            const correctedPath = getCorrectedPath(mediaItem.path);
-            
-            // Добавляем версию для борьбы с кэшированием
-            const finalPath = `${correctedPath}?v=${Date.now()}`;
-            
-            let mediaElement;
-
-            if (mediaItem.path.endsWith(".webm")) {
-                mediaElement = document.createElement("video");
-                mediaElement.src = finalPath;
-                mediaElement.autoplay = true;
-                mediaElement.loop = true;
-                mediaElement.muted = true;
-                mediaElement.preload = "metadata";
-                mediaElement.innerHTML = "Ваш браузер не поддерживает видео";
-                
-                mediaElement.onerror = () => {
-                    console.error(`Не удалось загрузить видео: ${finalPath}`);
-                    mediaElement.innerHTML = "Ошибка загрузки видео";
-                };
-
-            } else if (mediaItem.path.endsWith(".png") || mediaItem.path.endsWith(".webp")) {
-                mediaElement = document.createElement("img");
-                mediaElement.src = finalPath;
-                mediaElement.loading = "lazy";
-                mediaElement.alt = mediaItem.name;
-                
-                mediaElement.onerror = () => {
-                    console.error(`Не удалось загрузить изображение: ${finalPath}`);
-                    mediaElement.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f5f5f5'/><text x='50%' y='50%' font-family='Arial' font-size='10' text-anchor='middle' dominant-baseline='middle' fill='%23aaa'>Изображение</text></svg>";
-                };
-
-            } else if (mediaItem.path.endsWith(".json")) {
-                mediaElement = document.createElement("div");
-                mediaElement.classList.add("lottie-container");
-                
-                fetch(finalPath)
-                    .then(response => {
-                        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                        return response.json();
-                    })
-                    .then(animationData => {
-                        lottie.loadAnimation({
-                            container: mediaElement,
-                            renderer: 'svg',
-                            loop: true,
-                            autoplay: true,
-                            animationData: animationData
-                        });
-                    })
-                    .catch(error => {
-                        console.error(`Ошибка загрузки анимации ${finalPath}:`, error);
-                        mediaElement.innerHTML = `
-                            <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:#888;font-family:Arial;">
-                                Ошибка загрузки анимации
-                            </div>`;
-                    });
-            }
-
-            if (mediaElement) {
-                mediaItemElement.appendChild(mediaElement);
-                mediaItemElement.addEventListener('click', () => openMediaViewer({
-                    ...mediaItem,
-                    path: finalPath
-                }));
-                container.appendChild(mediaItemElement);
-            }
-        }
-
-        // Функции для работы с просмотром медиа
+        // Глобальные элементы
+        const contentDiv = document.getElementById("content");
         const mediaViewer = document.getElementById("mediaViewer");
         const mediaViewerContent = document.getElementById("mediaViewerContent");
         const closeViewer = document.querySelector(".close-viewer");
 
-        // Функция открытия просмотра (с учетом локального/гитхаб режима)
-        function openMediaViewer(mediaItem) {
-            // Сначала закрываем все возможные открытые медиа
-            closeMediaViewer();
+        // Определение окружения (локально или на GitHub Pages)
+        const isGitHub = window.location.host.includes('github.io');
+        const basePath = isGitHub ? `/${window.location.pathname.split('/')[1]}` : '';
+
+        // Функция для корректировки путей к файлам
+        function getCorrectedPath(originalPath) {
+            return originalPath.startsWith('assets/') && isGitHub 
+                ? `${basePath}/${originalPath}` 
+                : originalPath;
+        }
+
+        // Заполняем контейнеры медиафайлами
+        Object.entries(mediaData).forEach(([containerId, items]) => {
+            const container = document.getElementById(containerId);
+            if (!container) return;
             
+            items.forEach(item => {
+                const mediaItem = document.createElement("div");
+                mediaItem.classList.add("media-item");
+                
+                const correctedPath = getCorrectedPath(item.path);
+                const finalPath = `${correctedPath}?v=${Date.now()}`;
+                
+                if (item.path.endsWith(".webm")) {
+                    const video = document.createElement("video");
+                    video.src = finalPath;
+                    video.loop = true;
+                    video.muted = true;
+                    video.playsInline = true;
+                    video.autoplay = true; // Автовоспроизведение
+                    video.preload = "auto";
+                    mediaItem.appendChild(video);
+                    
+                    // Запускаем видео, если оно не началось автоматически
+                    video.onloadeddata = () => {
+                        video.play().catch(e => console.log("Autoplay prevented:", e));
+                    };
+                    
+                } else if (item.path.endsWith(".json")) {
+                    const animContainer = document.createElement("div");
+                    animContainer.classList.add("lottie-container");
+                    
+                    fetch(finalPath)
+                        .then(response => response.json())
+                        .then(data => {
+                            lottie.loadAnimation({
+                                container: animContainer,
+                                renderer: 'svg',
+                                loop: true,
+                                autoplay: true, // Автовоспроизведение
+                                animationData: data
+                            });
+                        })
+                        .catch(error => {
+                            console.error(`Error loading animation: ${finalPath}`, error);
+                            animContainer.innerHTML = '<div class="error">Error loading animation</div>';
+                        });
+                    mediaItem.appendChild(animContainer);
+                    
+                } else if (item.path.endsWith(".png") || item.path.endsWith(".webp")) {
+                    const img = document.createElement("img");
+                    img.src = finalPath;
+                    img.alt = item.name;
+                    img.loading = "lazy";
+                    img.onerror = () => {
+                        img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100' height='100' fill='%23f5f5f5'/><text x='50%' y='50%' font-family='Arial' font-size='10' text-anchor='middle' dominant-baseline='middle' fill='%23aaa'>Image</text></svg>";
+                    };
+                    mediaItem.appendChild(img);
+                }
+
+                mediaItem.addEventListener('click', () => openMediaViewer(item, finalPath));
+                container.appendChild(mediaItem);
+            });
+        });
+
+        // Функция открытия просмотра
+        function openMediaViewer(mediaItem, finalPath) {
+            // Очищаем предыдущий контент
             mediaViewerContent.innerHTML = '';
             
+            // Создаем новый элемент для просмотра
             let viewerElement;
-            const filePath = mediaItem.path.split('?')[0];
-            
-            // Блокируем скролл страницы
-            document.body.style.overflow = 'hidden';
-            document.documentElement.style.overflow = 'hidden';
-            
-            if (filePath.endsWith(".webm")) {
+            if (mediaItem.path.endsWith(".webm")) {
                 viewerElement = document.createElement("video");
-                viewerElement.src = mediaItem.path;
+                viewerElement.src = finalPath;
+                viewerElement.autoplay = true;
+                viewerElement.loop = true;
                 viewerElement.controls = true;
-                viewerElement.playsInline = true; // Важно для iOS
-                viewerElement.style.width = '100%';
-                viewerElement.style.maxHeight = '80vh';
-                viewerElement.style.objectFit = 'contain';
-                
-                // Останавливаем все другие видео
-                document.querySelectorAll('video').forEach(v => {
-                    if (v !== viewerElement) v.pause();
-                });
-                
-            } else if (filePath.endsWith(".png") || filePath.endsWith(".webp")) {
-                viewerElement = document.createElement("img");
-                viewerElement.src = mediaItem.path;
-                viewerElement.alt = mediaItem.name;
                 viewerElement.style.maxWidth = '100%';
                 viewerElement.style.maxHeight = '80vh';
                 
-            } else if (filePath.endsWith(".json")) {
+            } else if (mediaItem.path.endsWith(".png") || mediaItem.path.endsWith(".webp")) {
+                viewerElement = document.createElement("img");
+                viewerElement.src = finalPath;
+                viewerElement.style.maxWidth = '100%';
+                viewerElement.style.maxHeight = '80vh';
+                
+            } else if (mediaItem.path.endsWith(".json")) {
                 viewerElement = document.createElement("div");
-                viewerElement.className = "lottie-container";
+                viewerElement.classList.add("lottie-container");
                 viewerElement.style.width = '100%';
                 viewerElement.style.maxWidth = '300px';
-                viewerElement.style.height = '300px';
-                viewerElement.style.margin = '0 auto';
+                viewerElement.style.height = 'auto';
+                viewerElement.style.aspectRatio = '1/1';
                 
-                fetch(mediaItem.path)
+                fetch(finalPath)
                     .then(response => response.json())
                     .then(animationData => {
                         lottie.loadAnimation({
@@ -342,90 +269,60 @@
                             autoplay: true,
                             animationData: animationData
                         });
+                    })
+                    .catch(error => {
+                        console.error('Error loading animation:', error);
+                        viewerElement.innerHTML = '<div class="error">Error loading animation</div>';
                     });
             }
 
-            if (viewerElement) {
-                // Создаем контейнер для центрирования
-                const container = document.createElement('div');
-                container.style.display = 'flex';
-                container.style.flexDirection = 'column';
-                container.style.alignItems = 'center';
-                container.style.justifyContent = 'center';
-                container.style.width = '100%';
-                container.style.height = '100%';
-                container.style.padding = '20px';
-                container.style.boxSizing = 'border-box';
-                
-                container.appendChild(viewerElement);
-                mediaViewerContent.appendChild(container);
-                
-                // Показываем viewer после добавления контента
-                setTimeout(() => {
-                    mediaViewer.classList.add('active');
-                    
-                    // Для мобильных - дополнительная проверка
-                    if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
-                        document.body.style.position = 'fixed';
-                        document.body.style.width = '100%';
-                    }
-                }, 50);
+            mediaViewerContent.appendChild(viewerElement);
+            mediaViewer.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            if (/Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
             }
         }
 
         // Закрытие просмотра
         function closeMediaViewer() {
-            // Останавливаем все видео
-            document.querySelectorAll('video').forEach(v => {
-                v.pause();
-                v.currentTime = 0;
-            });
-            
-            // Останавливаем анимации Lottie
-            document.querySelectorAll('.lottie-container').forEach(container => {
-                if (container.lottie) {
-                    container.lottie.stop();
-                    container.lottie.destroy();
-                }
-            });
-            
-            // Восстанавливаем скролл
+            mediaViewer.classList.remove('active');
             document.body.style.overflow = 'auto';
-            document.documentElement.style.overflow = 'auto';
             document.body.style.position = '';
             document.body.style.width = '';
             
-            // Скрываем viewer
-            mediaViewer.classList.remove('active');
-            mediaViewerContent.innerHTML = '';
+            // Останавливаем видео при закрытии
+            const video = mediaViewerContent.querySelector('video');
+            if (video) {
+                video.pause();
+                video.currentTime = 0;
+            }
+            
+            // Перезагружаем миниатюрные видео
+            document.querySelectorAll('.media-container video').forEach(v => {
+                v.load();
+                v.play().catch(e => console.log("Autoplay prevented:", e));
+            });
         }
 
         // Обработчики событий
         closeViewer.addEventListener('click', closeMediaViewer);
         mediaViewer.addEventListener('click', (e) => {
-            // Закрываем только при клике на оверлей (не на контент)
             if (e.target === mediaViewer) {
                 closeMediaViewer();
             }
         });
 
-        // Управление темой
+        // Получаем параметр темы из URL
         const urlParams = new URLSearchParams(window.location.search);
         const theme = urlParams.get('theme');
-        if (theme === 'dark') {
-            document.body.classList.add('dark-theme');
-        }
+
+        // Применяем тему
+        document.body.classList.toggle('dark-theme', theme === 'dark');
 
         // Функции для работы с iframe
-        function sendHeight() {
-            const height = document.documentElement.scrollHeight;
-            window.parent.postMessage({
-                type: 'iframeHeight',
-                height: height,
-                id: window.frameElement?.id
-            }, '*');
-        }
-
         window.addEventListener('load', sendHeight);
         new ResizeObserver(sendHeight).observe(document.body);
 
@@ -435,13 +332,22 @@
             }
         });
 
-        // Заполняем контейнеры медиафайлами
-        document.addEventListener('DOMContentLoaded', function() {
-            for (const [containerId, items] of Object.entries(mediaData)) {
-                items.forEach(item => {
-                    addMediaToContainer(containerId, item);
+        function sendHeight() {
+            const height = document.documentElement.scrollHeight;
+            window.parent.postMessage({
+                type: 'iframeHeight',
+                height: height,
+                id: window.frameElement?.id
+            }, '*');
+        }
+
+        // Автозапуск всех видео после загрузки страницы
+        document.addEventListener('DOMContentLoaded', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.media-container video').forEach(video => {
+                    video.play().catch(e => console.log("Autoplay prevented:", e));
                 });
-            }
+            }, 1000);
         });
     </script>
 </body>

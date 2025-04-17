@@ -234,6 +234,13 @@
             // Очищаем предыдущий контент
             mediaViewerContent.innerHTML = '';
             
+            const contentWrapper = document.createElement('div');
+            contentWrapper.style.display = 'flex';
+            contentWrapper.style.justifyContent = 'center';
+            contentWrapper.style.alignItems = 'center';
+            contentWrapper.style.width = '100%';
+            contentWrapper.style.height = '100%';
+
             // Создаем новый элемент для просмотра
             let viewerElement;
             if (mediaItem.path.endsWith(".webm")) {
@@ -276,6 +283,8 @@
                     });
             }
 
+            contentWrapper.appendChild(viewerElement);
+            mediaViewerContent.appendChild(contentWrapper);
             mediaViewerContent.appendChild(viewerElement);
             mediaViewer.classList.add('active');
             document.body.style.overflow = 'hidden';
